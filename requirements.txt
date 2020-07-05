@@ -1,0 +1,4 @@
+# For aad
+click
+pillow
+git+https://github.com/shubhomoydas/ad_examples.git
