@@ -1,0 +1,2 @@
+# zwad
+ZTF anomaly detection
