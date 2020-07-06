@@ -2,6 +2,7 @@
 
 import os
 import sys
+import webbrowser
 
 import click
 import numpy as np
@@ -25,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 def save_answers(filename, names, decisions):
     df = pd.DataFrame(data = {
-        "SN": names,
+        "oid": names,
         "is_anomaly": decisions
     })
 
@@ -35,7 +36,7 @@ def save_answers(filename, names, decisions):
 def load_answers(filename):
     df = pd.read_csv(filename)
 
-    return df["SN"], df["is_anomaly"]
+    return df["oid"], df["is_anomaly"]
 
 
 def save_anomalies(filename, names):
@@ -45,9 +46,17 @@ def save_anomalies(filename, names):
 
 class InteractiveExpert(object):
     def __init__(self):
-        pass
+        try:
+            self._browser = webbrowser.get()
+        except webbrowser.Error:
+            self._browser = None
 
     def evaluate(self, name):
+        url = "https://ztf.snad.space/dr3/view/{}".format(name)
+        if self._browser is not None:
+            self._browser.open_new_tab(url)
+        else:
+            click.echo("Check {} for details".format(url))
         result = click.confirm("Is {} anomaly?".format(name))
         return result
 
@@ -92,10 +101,8 @@ def get_debug_args(budget=30, detector_type=AAD_IFOREST):
             "--forest_add_leaf_nodes_only",
             "--ensemble_score=%d" % ENSEMBLE_SCORE_LINEAR,
             # "--bayesian_rules",
-            "--resultsdir=../../data/aad",
-            "--log_file=../../data/aad/aad.log",
-            "--sn_list=../../data/tsne/tsne.9.csv",
-            '--fig_dir=../../fig',
+            "--resultsdir=./data/aad",
+            "--log_file=./data/aad/aad.log",
             "--debug"]
 
 
@@ -152,20 +159,6 @@ def describe_instances(x, instance_indexes, model, opts, interpretable=False):
     return zip(selected_region_idxs, instances_in_each_region), desc_regions
 
 
-def show_figure(sn, fig_dir, ext='.png'):
-    from PIL import Image
-
-    filename = sn + ext
-    for root, dirs, files in os.walk(fig_dir):
-        if filename in files:
-            break
-    else:
-        return
-    filepath = os.path.join(root, filename)
-    img = Image.open(filepath)
-    img.show()
-
-
 def get_expert(opts):
     answers_filename = opts.answers
 
@@ -210,9 +203,6 @@ def detect_anomalies_and_describe(x, names, opts):
                                    queried_items=queried)
         queried.extend(qx)
         for xi in qx:
-            if opts.show_figures:
-                basename = names[xi].split('_', 1)[0]
-                show_figure(basename, opts.fig_dir)
             yes = np.array(expert.evaluate(names[xi]), dtype=np.int64)
             y_labeled[xi] = yes
             if yes == 1:
@@ -237,7 +227,7 @@ def detect_anomalies_and_describe(x, names, opts):
         logger.debug("region_extents: these are of the form [{feature_index: (feature range), ...}, ...]\n%s" %
                      (str(region_extents)))
 
-    basename = '_'.join(os.path.splitext(os.path.basename(f))[0] for f in opts.sn_list)
+    basename = os.path.basename(opts.feature)
 
     anomalies_filepath = os.path.join(opts.resultsdir, 'anomalies_{}.txt'.format(basename))
     save_anomalies(anomalies_filepath, names[ha])
@@ -250,20 +240,18 @@ def detect_anomalies_and_describe(x, names, opts):
 
 def get_aad_option_list():
     parser = aad_globals.get_aad_option_list()
-    parser.add_argument('--sn_list', metavar='FILENAME', nargs='+', help='Filepath to tSNE SN list')
-    parser.add_argument('--show_figures', action='store_true', help='Show SN light curves')
-    parser.add_argument('--fig_dir', action='store', default='../../fig', help='Folder with SN light curves figures')
     parser.add_argument('--answers', metavar='FILENAME', action='store', help='answers.csv file for AnswersFileExpert')
+    parser.add_argument('--oid', metavar='FILENAME', action='store', help='Filepath to oid.dat', required=True)
+    parser.add_argument('--feature', metavar='FILENAME', action='store', help='Filepath to feature.dat', required=True)
     parser.add_argument('-n', '--non_interactive', action='store_true', help='Suppress InteractiveExpert')
     return parser
 
 
-class SNAadOpts(AadOpts):
+class ZTFAadOpts(AadOpts):
     def __init__(self, args):
-        super(SNAadOpts, self).__init__(args)
-        self.sn_list = args.sn_list
-        self.show_figures = args.show_figures
-        self.fig_dir = args.fig_dir
+        super(ZTFAadOpts, self).__init__(args)
+        self.oid = args.oid
+        self.feature = args.feature
         self.answers = args.answers
         self.non_interactive = args.non_interactive
 
@@ -310,31 +298,15 @@ def main():
         pass
     configure_logger(args)
 
-    opts = SNAadOpts(args)
+    opts = ZTFAadOpts(args)
     logger.debug(opts.str_opts())
 
     np.random.seed(opts.randseed)
 
-    sn_data_dfs = [pd.read_csv(f) for f in args.sn_list]
-    sn_name = np.hstack([df.iloc[:,0].values for df in sn_data_dfs])
-    if all('claimedtype' in df.columns for df in sn_data_dfs):  # extrapol file
-        if len(sn_data_dfs) > 1:  # numerous data files
-            sn_name += np.hstack([['_{}'.format(''.join(df.columns[1:4]))] * len(df) for df in sn_data_dfs])
-        lc_data = np.vstack([df.loc[:, 'g-20':'i+100'] for df in sn_data_dfs])
-        lc_data_norm = np.amax(lc_data, axis=1).reshape(-1, 1)
-        thetas = [np.array(df.loc[:,'log_likehood':'theta_8']) for df in sn_data_dfs]
-        theta_data = np.concatenate(thetas, axis=0)
-        theta_data_norm = np.amax(theta_data, axis=0) - np.amin(theta_data, axis=0)
-        theta_data = theta_data / theta_data_norm
-        sn_data = np.hstack([lc_data / lc_data_norm, -2.5 * np.log10(lc_data_norm), theta_data])
-    elif any('claimedtype' in df.columns for df in sn_data_dfs):
-        raise ValueError('All sn_list files should be either tsne* or extrapol*')
-    else:  # only tSNE file
-        sn_data = np.hstack([df.iloc[:, 1:].values for df in sn_data_dfs])
+    names    = np.memmap(opts.oid, mode='c', dtype=np.uint64)
+    features = np.memmap(opts.feature, mode='c', dtype=np.float32).reshape(names.shape[0], -1)
 
-    # run interactive anomaly detection loop
-    detect_anomalies_and_describe(sn_data, sn_name, opts)
-
+    detect_anomalies_and_describe(features, names, opts)
 
 if __name__ == "__main__":
     main()
