@@ -8,6 +8,7 @@ setuptools.setup(name='zwad',
                      'click',
                      'pillow',
                      'scikit-learn',
+                     'tqdm',
                  ],
                  entry_points={
                      'console_scripts': [

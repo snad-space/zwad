@@ -6,7 +6,8 @@ Before working with the code, the package should be installed in the development
 mode:
 ```shell
 git clone git@github.com:snad-space/zwad.git
-pip install -e zwad
+cd zwad
+pip install -e .
 ```
 
 ## Passive(?) anomaly detection example
@@ -14,7 +15,7 @@ pip install -e zwad
 ```shell
 # Get the data and extract it right here
 wget http://sai.snad.space/ztf/m31.tar.gz
-tar xzf m32.tar.gz
+tar xzf m31.tar.gz
 
 # Run one algorithm
 zwadp -c iso oid_m31.dat feature_m31.dat > m31_iso.csv
