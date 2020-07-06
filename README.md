@@ -10,6 +10,14 @@ cd zwad
 pip install -e .
 ```
 
+## Data download
+```shell
+cd data
+for FILE in deep disk m31; do
+    wget "http://sai.snad.space/ztf/${FILE}.tar.gz" -O - | tar -zxf -
+done
+```
+
 ## Passive(?) anomaly detection example
 
 ```shell
