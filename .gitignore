@@ -1,0 +1,22 @@
+### Python ###
+
+# Byte-compiled
+__pycache__/
+*.pyc
+
+# Distribution
+build/
+dist/
+*.egg-info/
+
+
+### PyCharm ###
+.idea/
+
+
+### Jupyter ###
+.ipynb_checkpoints/
+
+
+### SN data base ###
+sne/
