@@ -21,10 +21,6 @@ done
 ## Passive(?) anomaly detection example
 
 ```shell
-# Get the data and extract it right here
-wget http://sai.snad.space/ztf/m31.tar.gz
-tar xzf m31.tar.gz
-
 # Run one algorithm
 zwadp -c iso oid_m31.dat feature_m31.dat > m31_iso.csv
 
