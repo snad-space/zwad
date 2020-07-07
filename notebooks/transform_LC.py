@@ -1,47 +1,47 @@
 import os
 import pandas as pd
-import json
-import joblib
+import requests
 import numpy as np
+import joblib 
 
-def transform_ztf_pickle(data_dir: str, output_fname: str):
+def transform_ztf(oids_file: str, output_fname=None):
     """Load individual ZTF light curves and save sample to pickle file.
     
     Parameters
     ----------
-    data_dir: str
+    oids_file: str
         Path to ZTF light curves. Each objects is consider 
         given in 1 json file.
-    output_fname: str
+    output_fname: str (optional)
         Output file name where sample will be saved.
-        If False, return the entire sample as a list of lists.
+        If None, return the entire sample as a list of lists.
+        Default is None.
     """
     
     # store light curves    
     light_curves = []
+    failed = []
 
     # read filenames: 1 file for each light curve
-    flist = os.listdir(data_dir)
-
-    failed = []
+    with open(oids_file) as f:
+        flist = f.read().split()
     
-    for fname in flist:
-        try:
-            with open(data_dir + fname) as json_file:    
-                    data_raw = json.load(json_file)               
-  
-                    # get object id
-                    objid = fname[:-5]
+    for objid in flist:
         
-                    # number of observations
-                    nobs = len(data_raw[objid]['lc'])
-
-                    # format useful data 
-                    mjd = [data_raw[objid]['lc'][i]['mjd'] for i in range(nobs)]
-                    mag = [data_raw[objid]['lc'][i]['mag'] for i in range(nobs)]
-                    magerr = [data_raw[objid]['lc'][i]['magerr'] for i in range(nobs)]
-                    clrcoeff = [data_raw[objid]['lc'][i]['clrcoeff'] for i in range(nobs)]
-                    catflags = [data_raw[objid]['lc'][i]['catflags'] for i in range(nobs)]
+        print(list(flist).index(objid))
+        
+        try:
+            data_raw = requests.get('http://db.ztf.snad.space/api/v2/oid/full/json?oid=' + str(objid)).json()
+    
+            # number of observations
+            nobs = len(data_raw[objid]['lc'])
+                    
+            # format useful data 
+            mjd = [data_raw[objid]['lc'][i]['mjd'] for i in range(nobs)]
+            mag = [data_raw[objid]['lc'][i]['mag'] for i in range(nobs)]
+            magerr = [data_raw[objid]['lc'][i]['magerr'] for i in range(nobs)]
+            clrcoeff = [data_raw[objid]['lc'][i]['clrcoeff'] for i in range(nobs)]
+            catflags = [data_raw[objid]['lc'][i]['catflags'] for i in range(nobs)]
 
             # build a data frame
             data_lc = pd.DataFrame()
@@ -50,9 +50,6 @@ def transform_ztf_pickle(data_dir: str, output_fname: str):
             data_lc['magerr'] = magerr
             data_lc['clrcoeff'] = clrcoeff
             data_lc['catflags'] = catflags
-            data_lc['mag_mean'] = np.mean(data_lc['mag'].values)
-            data_lc['mag_mean_err'] = np.mean(data_lc['mag_mean_err'].values)
-            data_lc['mag_cent'] = data_lc['mag'].values - data_lc['mag_mean'].values[0]
             
             # drop duplicates (if any)
             data_lc.drop_duplicates(subset=['mjd'], keep='first', inplace=True)
@@ -65,12 +62,10 @@ def transform_ztf_pickle(data_dir: str, output_fname: str):
             data_lc['time_diff'] = time_diff
         
             light_curves.append(data_lc[['time_diff', 'mag', 'magerr']].values)
-    
-            if output_fname:
-                joblib.dump(light_curves, output_fname, compress=3)
-        
+                
         except:
-                failed.append(fname)
-                pass
+            print('failed: ', objid)
+            failed.append(objid)
             
-    return np.array(light_curves), failed
+    np.save(output_fname, np.array(light_curves), allow_pickle=True)
+    np.save('failed', np.array(failed))
