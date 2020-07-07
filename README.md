@@ -18,6 +18,14 @@ for FILE in deep disk m31; do
 done
 ```
 
+## Active anomaly detection example
+
+```shell
+zwaad --oid data/oid_m31.dat --feature data/feature_m31.dat
+```
+
+Results should appear in `./data/aad/` directory.
+
 ## Passive(?) anomaly detection example
 
 ```shell
