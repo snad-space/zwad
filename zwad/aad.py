@@ -256,13 +256,17 @@ class ZTFAadOpts(AadOpts):
         self.non_interactive = args.non_interactive
 
 
-def get_aad_command_args(debug=False, debug_args=None):
+def get_aad_command_args(argv, debug=False, debug_args=None):
     if debug_args is None:
         debug_args = []
 
     parser = get_aad_option_list()
 
-    unparsed_args = sys.argv[1:]
+    if argv:
+        unparsed_args = argv[:1]
+    else:
+        unparsed_args = sys.argv[1:]
+
     if debug:
         unparsed_args = debug_args + unparsed_args
 
@@ -284,10 +288,10 @@ def get_aad_command_args(debug=False, debug_args=None):
     return args
 
 
-def main():
+def main(argv=None):
     # Prepare the aad arguments. It is easier to first create the parsed args and
     # then create the actual AadOpts from the args
-    args = get_aad_command_args(debug=True, debug_args=get_debug_args())
+    args = get_aad_command_args(argv=argv, debug=True, debug_args=get_debug_args())
     try:
         os.makedirs(args.resultsdir)
     except OSError:
@@ -307,6 +311,9 @@ def main():
     features = np.memmap(opts.feature, mode='c', dtype=np.float32).reshape(names.shape[0], -1)
 
     detect_anomalies_and_describe(features, names, opts)
+
+def execute_from_commandline(argv=None):
+    main(argv)
 
 if __name__ == "__main__":
     main()
