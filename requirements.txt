@@ -1,6 +1,0 @@
-# For aad
-pandas<1.0
-click
-pillow
-scikit-learn<0.23
-git+https://github.com/shubhomoydas/ad_examples.git
