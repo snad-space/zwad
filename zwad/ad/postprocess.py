@@ -9,13 +9,13 @@ for further querying.
 """
 
 
-def load_ad_table(path, index_column='SNe'):
+def load_ad_table(path, index_column='oid'):
     """Load one file with AD results.
 
     Parameters
     ----------
     path: Path to CSV file for loading.
-    index_column: Name of the first column. Defaults to 'SNe'. The second column's name is driven from filename.
+    index_column: Name of the first column. Defaults to 'oid'. The second column's name is driven from filename.
 
     Returns
     -------
@@ -46,13 +46,13 @@ def load_ad_tables_by_patterns(patterns):
     return merge_ad_tables(all_tables)
 
 
-def merge_ad_tables(tables, index_column='SNe'):
+def merge_ad_tables(tables, index_column='oid'):
     """Merge the list of tables with AD results.
 
     Parameters
     ----------
     tables: list of AD results tables to load
-    index_column: Column to index on. Defaults to 'SNe'.
+    index_column: Column to index on. Defaults to 'oid'.
 
     Returns
     -------
@@ -78,7 +78,7 @@ def extract_ad_subtable(table, value_columns):
     -------
     Extracted subtable.
     """
-    columns = ['SNe'] + value_columns
+    columns = ['oid'] + value_columns
     subtable = table.loc[:, columns].dropna(thresh=2).sort_values(by=value_columns).reset_index(drop=True)
     sorted_index = subtable.iloc[:, 1:].isna().sum(axis=1).values.argsort(kind='stable')
     sorted_subtable = subtable.loc[sorted_index].reset_index(drop=True)
