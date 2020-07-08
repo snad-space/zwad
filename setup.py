@@ -9,10 +9,7 @@ setuptools.setup(name='zwad',
                      'pillow',
                      'scikit-learn<0.23',
                      'tqdm',
-                     'ad_examples'],
-                 dependency_links=[
-                     'git+https://github.com/shubhomoydas/ad_examples.git#egg=ad_examples-0'
-                 ],
+                     'ad_examples @ git+https://github.com/shubhomoydas/ad_examples.git#egg=ad_examples-0.0.0'],
                  entry_points={
                      'console_scripts': [
                          'zwaad = zwad.aad:execute_from_commandline',
