@@ -62,10 +62,10 @@ class InteractiveExpert(object):
 
 
 class AnswersFileExpert(object):
-    def __init__(self, filename, spare_expert=None):
-        self.filename = filename
+    def __init__(self, filenames, spare_expert=None):
+        dicts = [dict(zip(*load_answers(f))) for f in filenames]
+        self._answers = dict([x for d in dicts for x in d.items()])
         self.spare_expert = spare_expert
-        self._answers = dict(zip(*load_answers(self.filename)))
 
     def evaluate(self, name):
         answer = self._answers.get(name)
@@ -160,16 +160,16 @@ def describe_instances(x, instance_indexes, model, opts, interpretable=False):
 
 
 def get_expert(opts):
-    answers_filename = opts.answers
+    answers_filenames = opts.answers
 
-    if answers_filename is None:
+    if answers_filenames is None:
         return InteractiveExpert()
 
     spare_expert = None
     if not opts.non_interactive:
         spare_expert = InteractiveExpert()
 
-    return AnswersFileExpert(answers_filename, spare_expert=spare_expert)
+    return AnswersFileExpert(answers_filenames, spare_expert=spare_expert)
 
 
 def detect_anomalies_and_describe(x, names, opts):
@@ -227,7 +227,7 @@ def detect_anomalies_and_describe(x, names, opts):
         logger.debug("region_extents: these are of the form [{feature_index: (feature range), ...}, ...]\n%s" %
                      (str(region_extents)))
 
-    basename = os.path.basename(opts.feature)
+    basename = os.path.basename(opts.feature[0])
 
     anomalies_filepath = os.path.join(opts.resultsdir, 'anomalies_{}.txt'.format(basename))
     save_anomalies(anomalies_filepath, names[ha])
@@ -240,9 +240,9 @@ def detect_anomalies_and_describe(x, names, opts):
 
 def get_aad_option_list():
     parser = aad_globals.get_aad_option_list()
-    parser.add_argument('--answers', metavar='FILENAME', action='store', help='answers.csv file for AnswersFileExpert')
-    parser.add_argument('--oid', metavar='FILENAME', action='store', help='Filepath to oid.dat', required=True)
-    parser.add_argument('--feature', metavar='FILENAME', action='store', help='Filepath to feature.dat', required=True)
+    parser.add_argument('--answers', metavar='FILENAME', action='append', help='answers.csv file for AnswersFileExpert')
+    parser.add_argument('--oid', metavar='FILENAME', action='append', help='Filepath to oid.dat', required=True)
+    parser.add_argument('--feature', metavar='FILENAME', action='append', help='Filepath to feature.dat', required=True)
     parser.add_argument('-n', '--non_interactive', action='store_true', help='Suppress InteractiveExpert')
     return parser
 
@@ -287,6 +287,17 @@ def get_aad_command_args(argv, debug=False, debug_args=None):
 
     return args
 
+def load_data(oid_list, feature_list):
+    filenames = zip(oid_list, feature_list)
+
+    def load_single(oid_filename, feature_filename):
+        oid     = np.memmap(oid_filename, mode='c', dtype=np.uint64)
+        feature = np.memmap(feature_filename, mode='c', dtype=np.float32).reshape(oid.shape[0], -1)
+
+        return oid, feature
+
+    oids, features = zip(*[load_single(*f) for f in filenames])
+    return np.concatenate(oids), np.vstack(features)
 
 def main(argv=None):
     # Prepare the aad arguments. It is easier to first create the parsed args and
@@ -307,8 +318,7 @@ def main(argv=None):
 
     np.random.seed(opts.randseed)
 
-    names    = np.memmap(opts.oid, mode='c', dtype=np.uint64)
-    features = np.memmap(opts.feature, mode='c', dtype=np.float32).reshape(names.shape[0], -1)
+    names, features = load_data(opts.oid, opts.feature)
 
     detect_anomalies_and_describe(features, names, opts)
 
