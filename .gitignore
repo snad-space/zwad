@@ -18,5 +18,7 @@ dist/
 .ipynb_checkpoints/
 
 
-### SN data base ###
-sne/
+### Datasets and anomaly lists ###
+data/*.dat
+data/*.name
+data/*.csv
