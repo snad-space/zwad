@@ -26,12 +26,15 @@ def load_ad_table(path, index_column='oid'):
     return pd.read_csv(path, names=[index_column, basename], index_col=None)
 
 
-def load_ad_tables_by_patterns(patterns):
+def load_ad_tables_by_patterns(patterns, sorting='hits'):
     """Load all the file with AD results matching any patterns from the specified list.
 
     Parameters
     ----------
     patterns: Glob patterns of files for loading.
+    sorting: Sorting preference:
+        * 'hits' sorts by number of anomaly hits with different algos. (Default)
+        * None for no sorting.
 
     Returns
     -------
@@ -43,7 +46,18 @@ def load_ad_tables_by_patterns(patterns):
         one_pattern_tables = [load_ad_table(filename) for filename in glob.glob(pattern)]
         all_tables.append(merge_ad_tables(one_pattern_tables))
 
-    return merge_ad_tables(all_tables)
+    table = merge_ad_tables(all_tables)
+
+    # Sort the table, if needed
+    if sorting == 'hits':
+        index = table.isna().sum(axis=1).sort_values(kind='mergesort').index
+        table = table.loc[index].reset_index(drop=True)
+    elif sorting is None:
+        pass
+    else:
+        raise ValueError('unknown sorting algorithm: {}'.format(sorting))
+
+    return table
 
 
 def merge_ad_tables(tables, index_column='oid'):
