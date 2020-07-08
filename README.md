@@ -7,7 +7,7 @@ mode:
 ```shell
 git clone git@github.com:snad-space/zwad.git
 cd zwad
-pip install -e .
+python3 setup.py develop
 ```
 
 ## Data download
