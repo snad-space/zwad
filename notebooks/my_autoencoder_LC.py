@@ -36,15 +36,15 @@ tf.compat.v1.keras.backend.set_session(tf.compat.v1.Session(config=tf.compat.v1.
 # transform ZTF data
 # only do this once
 
-data_fname1 = '/home/sreejith/Downloads/snad/git/zwad/data/zr400/all1'
-data_fname2 = '/home/sreejith/Downloads/snad/git/zwad/data/zr400/all2'
+data_fname1 = '/data/zr400/all1'
+data_fname2 = '/data/zr400/all2'
 
 
 if not os.path.isfile(data_fname1 + '.npy'):
-    failed = transform_ztf(oids_file='/home/sreejith/Downloads/snad/git/zwad/data/zr400/zr400.txt', output_fname=data_fname1)
+    failed = transform_ztf(oids_file='data/zr400/zr400.txt', output_fname=data_fname1)
   
 if not os.path.isfile(data_fname2 + '.npy'):
-    failed = transform_ztf(oids_file='/home/sreejith/Downloads/snad/git/zwad/data/zr400/zr533.txt', output_fname=data_fname2)
+    failed = transform_ztf(oids_file='/data/zr400/zr533.txt', output_fname=data_fname2)
 
 data1 = np.load(data_fname1 + '.npy',allow_pickle=True)
 data2 = np.load(data_fname2 + '.npy',allow_pickle=True)
