@@ -13,7 +13,7 @@ pip install -e .
 ## Data download
 ```shell
 cd data
-for FILE in deep disk m31; do
+for FILE in deep disk m31 deep_pca15 disk_pca15 m31_pca15; do
     wget "http://sai.snad.space/ztf/${FILE}.tar.gz" -O - | tar -zxf -
 done
 ```
