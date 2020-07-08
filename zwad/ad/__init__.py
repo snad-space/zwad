@@ -25,11 +25,21 @@ class ZtfAnomalyDetector:
         self.parser = self._make_parser()
         self.args = self.parser.parse_args()
 
-        # Read OIDs
-        self.names = np.memmap(self.args.oid, dtype=np.int64)
+        # Check number of datasets
+        if len(self.args.oid) != len(self.args.feature):
+            raise ValueError('number of oid files should be the same as features files')
 
-        # Read features and rescale them
-        self.values = np.memmap(self.args.features, dtype=np.float32).reshape(self.names.size, -1)
+        # Read OIDs and features
+        names_array_list = []  # list of arrays with object names
+        values_array_list = []  # list of arrays with object values (features)
+        for i in range(len(self.args.oid)):
+            names_one_array = np.memmap(self.args.oid[i], dtype=np.int64)
+            names_array_list.append(names_one_array)
+            values_one_array = np.memmap(self.args.feature[i], dtype=np.float32).reshape(names_one_array.size, -1)
+            values_array_list.append(values_one_array)
+
+        self.names = np.concatenate(names_array_list, axis=0)
+        self.values = np.concatenate(values_array_list, axis=0)
 
         # Classifier
         self.classifier = self.classifiers[self.args.classifier]
@@ -81,14 +91,16 @@ class ZtfAnomalyDetector:
                             help='Use first n objects, -1 for using all the objects.')
         parser.add_argument('-j', '--jobs', default=None, type=int,
                             help='Cores usage. Defaults to 1.')
-        parser.add_argument('oid', help='Name of the file with object IDs')
-        parser.add_argument('features', help='Name of the file with corresponding features')
         parser.add_argument('-a', '--anomalies', default=40, type=int,
                             help='Number of anomalies to derive. Defaults to 40')
         parser.add_argument('-o', '--output', default=None,
                             help='Dump all the scores to the selected file.')
         parser.add_argument('-s', '--seed', default=42, type=int,
                             help='Fix the seed for reproducibility. Defaults to 42.')
+        parser.add_argument('--oid', help='Name of the file with object IDs. May be repeated.',
+                            required=True, action='append')
+        parser.add_argument('--feature', help='Name of the file with corresponding features. May be repeated.',
+                            required=True, action='append')
         return parser
 
     @classmethod
