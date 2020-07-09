@@ -13,6 +13,7 @@ setuptools.setup(name='zwad',
                  entry_points={
                      'console_scripts': [
                          'zwaad = zwad.aad:execute_from_commandline',
-                         'zwadp = zwad.ad:ZtfAnomalyDetector.script'
+                         'zwadp = zwad.ad:ZtfAnomalyDetector.script',
+                         'zwann = zwad.nn:execute_from_commandline',
                      ]
                  })
