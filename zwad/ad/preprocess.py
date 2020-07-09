@@ -10,6 +10,10 @@ def load_dataset(oid_file, feature_file, feature_names_file=None):
     oid_file: file with stored numpy array of oids
     feature_file: file with stored numpy array of corresponding featues
     feature_names_file: file with features' names (Optional, default: None).
+
+    Return
+    ------
+    Loaded dataset.
     """
     oid = np.memmap(oid_file, mode='r', dtype=np.uint64)
 
@@ -24,6 +28,22 @@ def load_dataset(oid_file, feature_file, feature_names_file=None):
         features = features.reshape(oid.size, -1)
 
     return oid, features
+
+
+def concat_datasets(*args):
+    """
+    Concatenate datasets.
+
+    Parameters
+    ----------
+    args: pairs of datasets (oids, features).
+
+    Return
+    ------
+    Resulting dataset, also a pair (oids, features).
+    """
+    oids, features = zip(*args)
+    return np.concatenate(oids, axis=0), np.concatenate(features, axis=0)
 
 
 def scale_values(features, algorithm=None):
