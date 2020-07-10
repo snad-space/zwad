@@ -103,8 +103,8 @@ class ZtfAnomalyDetector:
                             help='Dump all the scores to the selected file.')
         parser.add_argument('-s', '--seed', default=42, type=int,
                             help='Fix the seed for reproducibility. Defaults to 42.')
-        parser.add_argument('-k', '--scale', default='pca', type=str,
-                            help='Scale algorithm. One of minmax, std, pca. '
+        parser.add_argument('-k', '--scale', default='std', type=str,
+                            help='Scale algorithm. One of minmax, std, pca. Default is std. '
                                  'The last one may have optional number of components, e.g. -k pca15.')
         parser.add_argument('--oid', help='Name of the file with object IDs. May be repeated.',
                             required=True, action='append')
