@@ -1,0 +1,50 @@
+[package]
+name = "feat_extr"
+version = "0.2.3"
+authors = ["Konstantin Malanchev <hombit@gmail.com>"]
+edition = "2018"
+
+[profile.release]
+lto = true
+codegen-units = 1
+
+[dependencies]
+light-curve-interpol = "0.1.0"
+light-curve-common = "0.1.0"
+postgres = "^0.17.3"
+fallible-iterator = "^0.2.0"
+num-traits = "^0.2.0"
+conv = "^0.3.2"
+clap = "^2.33"
+itertools = "^0.8.0"
+num_cpus = "^1.10"
+crossbeam = "^0.7.3"
+unzip3 = "1"
+futures-util = "^0.3.0"
+async-std = "^1.4.0"
+md5 = "^0.7.0"
+hdf5 = "^0.6.1"
+ndarray = "^0.13"
+dyn-clone = "^1.0.2"
+base64 = "^0.12.2"
+
+[dependencies.light-curve-feature]
+version = "0.1.17"
+default-features = false
+features = ["fftw-mkl"]
+
+[dependencies.clickhouse-rs]
+version = "0.2.0-alpha.5"
+default-features = false
+features = ["async_std"]
+
+[dev-dependencies]
+rand = "0.7"
+
+[lib]
+name = "feat_extr"
+path = "src/lib.rs"
+
+[[bin]]
+name = "feat_extr"
+path = "src/bin/main.rs"
