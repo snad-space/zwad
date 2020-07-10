@@ -14,6 +14,8 @@ from ad_examples.aad.forest_description import CompactDescriber, MinimumVolumeCo
 
 import pandas as pd
 
+from zwad.utils import load_data
+
 """
 A simple no-frills demo of how to use AAD in an interactive loop.
 
@@ -286,18 +288,6 @@ def get_aad_command_args(argv, debug=False, debug_args=None):
     args.marked = []
 
     return args
-
-def load_data(oid_list, feature_list):
-    filenames = zip(oid_list, feature_list)
-
-    def load_single(oid_filename, feature_filename):
-        oid     = np.memmap(oid_filename, mode='c', dtype=np.uint64)
-        feature = np.memmap(feature_filename, mode='c', dtype=np.float32).reshape(oid.shape[0], -1)
-
-        return oid, feature
-
-    oids, features = zip(*[load_single(*f) for f in filenames])
-    return np.concatenate(oids), np.vstack(features)
 
 def main(argv=None):
     # Prepare the aad arguments. It is easier to first create the parsed args and

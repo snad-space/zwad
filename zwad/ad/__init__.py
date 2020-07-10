@@ -21,9 +21,9 @@ class ZtfAnomalyDetector:
         'iso': IsolationForest(max_samples=1000, contamination='auto', behaviour='new', n_estimators=1000),
     }
 
-    def __init__(self):
+    def __init__(self, args=None):
         self.parser = self._make_parser()
-        self.args = self.parser.parse_args()
+        self.args = self.parser.parse_args(args=args)
 
         # Check number of datasets
         if len(self.args.oid) != len(self.args.feature):
@@ -57,7 +57,13 @@ class ZtfAnomalyDetector:
             self.values = self.values[:n, :]
 
         # Scaling
-        self.values = scale_values(self.values)
+        if self.args.scale.startswith('pca') and len(self.args.scale) > 3:
+            # Case of pca15, pca41 etc
+            self.values = scale_values(self.values, algorithm='pca')
+            components = int(self.args.scale[3:])
+            self.values = self.values[:, :components]
+        else:
+            self.values = scale_values(self.values, algorithm=self.args.scale)
 
         # Jobs number
         self.jobs = self.args.jobs
@@ -97,6 +103,9 @@ class ZtfAnomalyDetector:
                             help='Dump all the scores to the selected file.')
         parser.add_argument('-s', '--seed', default=42, type=int,
                             help='Fix the seed for reproducibility. Defaults to 42.')
+        parser.add_argument('-k', '--scale', default='pca', type=str,
+                            help='Scale algorithm. One of minmax, std, pca. '
+                                 'The last one may have optional number of components, e.g. -k pca15.')
         parser.add_argument('--oid', help='Name of the file with object IDs. May be repeated.',
                             required=True, action='append')
         parser.add_argument('--feature', help='Name of the file with corresponding features. May be repeated.',
