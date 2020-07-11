@@ -1,4 +1,7 @@
 import numpy as np
+import scipy.stats
+
+from sklearn.preprocessing import quantile_transform, robust_scale
 
 
 def scale_values(features, algorithm=None):
@@ -8,10 +11,12 @@ def scale_values(features, algorithm=None):
     Parameters
     ----------
     features: Matrix of N-by-M values with N experiments and M features.
-    algorithm: Scaling algorithm: 'minmax', 'std'(default) or 'pca'.
+    algorithm: Scaling algorithm: 'minmax', 'std'(default), 'pca' or 'norm'.
     Minmax algorithm scales to the [0; 1] interval, while std algorithm
     scales to the zero mean and unitary standard deviation. PCA algorithm
     performs linear transform to principal axes of covariance ellipsoid.
+    'norm' transforms the empirical distribution of features to a more normal
+    one.
 
     Return
     ------
@@ -33,5 +38,7 @@ def scale_values(features, algorithm=None):
         delta = maxis - minis
         delta[delta == 0] = 1.0
         return (features - minis) / delta
+    elif algorithm == 'norm':
+        return quantile_transform(features, output_distribution='normal', copy=True)
     else:
         raise ValueError('Unkown scale algorithm: {}'.format(algorithm))
