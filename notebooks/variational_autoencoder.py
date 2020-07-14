@@ -1,6 +1,6 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+#from __future__ import absolute_import
+#from __future__ import division
+#from __future__ import print_function
 
 import keras
 from keras.layers import Lambda, Input, Dense
@@ -26,8 +26,17 @@ np.random.seed(42)
 max_cores = 4
 
 tf.compat.v1.keras.backend.set_session(tf.compat.v1.Session(config=tf.compat.v1.ConfigProto(intra_op_parallelism_threads=max_cores,inter_op_parallelism_threads=max_cores)))
-data_fname1 = '/.../.../zwad/data/zr400/all1'
+data_fname1 = '/home/sreejith/Downloads/snad/git/zwad/data/zr400/all1'
+data_fname2 = '/home/sreejith/Downloads/snad/git/zwad/data/zr400/all2'
+
 data1 = np.load(data_fname1 + '.npy',allow_pickle=True)
+data2 = np.load(data_fname2 + '.npy',allow_pickle=True)
+
+data1_new = np.pad(data1,((0,0),(67,67),(0,0)),'constant')
+data2_new = np.pad(data2,((0,0),(0,1),(0,0)),'constant')
+
+data = np.vstack((data1_new,data2_new))   
+
 
 # reparameterization trick
 # instead of sampling from Q(z|X), sample epsilon = N(0,I)
@@ -52,10 +61,10 @@ def sampling(args):
 
 #train_data = np.expand_dims(data1,axis=-1)  
 
-x_train,x_test,x_valid,x_ground= train_test_split(data1,data1,test_size=0.1,random_state=42)
+x_train,x_test,x_valid,x_ground= train_test_split(data,data,test_size=0.1,random_state=42)
 
 
-original_dim = data1.shape[1]*data1.shape[2]
+original_dim = data.shape[1]*data.shape[2]
 
 x_train = np.reshape(x_train, [-1, original_dim])
 x_test = np.reshape(x_test, [-1, original_dim])
@@ -67,9 +76,9 @@ x_ground = np.reshape(x_ground, [-1, original_dim])
 
 # network parameters
 input_shape = (original_dim, )
-intermediate_dim = 200
+intermediate_dim = 801
 batch_size = 100
-latent_dim = 10
+latent_dim = 3
 epochs = 100
 
 # VAE model = encoder + decoder
@@ -126,16 +135,14 @@ plt.show()
 
 
 pred_train = vae.predict(x_train)
-latent_inputs
+#latent_inputs
 
 
 indx = np.random.choice(np.arange(0, pred_train.shape[0]))
 
 plt.figure()
+plt.plot(x_train[indx])
 plt.plot(pred_train[indx])
 plt.show()
 
-plt.figure()
-plt.plot(x_train[indx])
-plt.show()
 
