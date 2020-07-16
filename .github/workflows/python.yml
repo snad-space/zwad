@@ -1,0 +1,30 @@
+name: Python
+
+on:
+  push:
+    paths:
+    - 'setup.py'
+    - 'zwad/**'
+    - '.github/workflows/python.yml'
+  pull_request:
+    paths:
+    - 'setup.py'
+    - 'zwad/**'
+    - '.github/workflows/python.yml'
+
+jobs:
+  zwad:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - run: pip install -e .
+    - name: Test run of zwadp
+      run: zwadp --oid data/fakes/oid_m31_fake.dat --feature data/fakes/feature_m31_fake.dat
+    - name: Test run of zwaad
+      run: yes | zwaad --oid data/fakes/oid_m31_fake.dat --feature data/fakes/feature_m31_fake.dat --budget 5
+    - name: Test run of zwann
+      run: zwann --oid data/fakes/oid_m31_fake.dat --feature data/fakes/feature_m31_fake.dat --lookup 0
+
