@@ -19,6 +19,6 @@ dist/
 
 
 ### Datasets and anomaly lists ###
-data/*.dat
-data/*.name
-data/*.csv
+data/**/*.dat
+data/**/*.name
+data/**/*.csv
