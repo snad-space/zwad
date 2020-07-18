@@ -15,12 +15,12 @@ def test_zwaad():
     """
     Test run of zwaad
     """
-    p1 = Popen(['yes'], stdout=PIPE)
-    p2 = Popen(['zwaad',
-                '--oid', 'data/fakes/oid_m31_fake.dat',
-                '--feature', 'data/fakes/feature_m31_fake.dat',
-                '--budget', '5'], stdin=p1.stdout)
-    assert p2.wait() == 0
+    r = run(['zwaad',
+             '--oid', 'data/fakes/oid_m31_fake.dat',
+             '--feature', 'data/fakes/feature_m31_fake.dat',
+             '--budget', '5',
+             '--yes'])
+    assert r.returncode == 0
 
 
 def test_zwann():
