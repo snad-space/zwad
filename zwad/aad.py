@@ -75,6 +75,13 @@ class AnswersFileExpert(object):
             return self.spare_expert.evaluate(name)
         return answer
 
+class AllYesExpert(object):
+    def __init__(self):
+        pass
+
+    def evaluate(self, name):
+        return True
+
 
 def get_debug_args(budget=30, detector_type=AAD_IFOREST):
     # return the AAD parameters what will be parsed later
@@ -164,6 +171,9 @@ def describe_instances(x, instance_indexes, model, opts, interpretable=False):
 def get_expert(opts):
     answers_filenames = opts.answers
 
+    if opts.yes is True:
+        return AllYesExpert()
+
     if answers_filenames is None:
         return InteractiveExpert()
 
@@ -246,6 +256,7 @@ def get_aad_option_list():
     parser.add_argument('--oid', metavar='FILENAME', action='append', help='Filepath to oid.dat', required=True)
     parser.add_argument('--feature', metavar='FILENAME', action='append', help='Filepath to feature.dat', required=True)
     parser.add_argument('-n', '--non_interactive', action='store_true', help='Suppress InteractiveExpert')
+    parser.add_argument('-y', '--yes', action='store_true', help='Select \'yes\' for every choise')
     return parser
 
 
@@ -256,6 +267,7 @@ class ZTFAadOpts(AadOpts):
         self.feature = args.feature
         self.answers = args.answers
         self.non_interactive = args.non_interactive
+        self.yes = args.yes
 
 
 def get_aad_command_args(argv, debug=False, debug_args=None):
