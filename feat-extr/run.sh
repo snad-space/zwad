@@ -26,7 +26,12 @@ docker-compose run --rm clickhouse_cyg \
         WHERE fieldid = ${FIELDID}
           AND catflags = 0
           AND mjd <= 58483.0
-          AND oid IN (SELECT oid FROM ztf.dr3_meta_short WHERE fieldid = ${FIELDID} AND filter = ${FILTER} AND ngoodobs >= ${MIN_NGOODOBS})
+          AND oid IN (SELECT oid
+            FROM ztf.dr3_meta_short
+            WHERE fieldid = ${FIELDID}
+              AND filter = ${FILTER}
+              AND ngoodobs >= ${MIN_NGOODOBS}
+          )
         ORDER BY h3index10, oid, mjd
 " \
     --suffix=_${NAME} \
