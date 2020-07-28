@@ -1,5 +1,6 @@
 import os
 import glob
+import numpy as np
 import pandas as pd
 
 """
@@ -114,3 +115,37 @@ def save_anomaly_list(filename, names, scores):
     """
     table = pd.concat((pd.Series(names), pd.Series(scores)), axis=1)
     table.to_csv(filename, header=False, index=False)
+
+
+def load_expert_table(filename):
+    """
+    Load table with expert analysis of the anomalies.
+
+    Parameters
+    ----------
+    filename: Name of the file for loading.
+
+    Returns
+    -------
+    Loaded table.
+    """
+    return pd.read_csv(filename, header=0, index_col=0)
+
+
+def extract_anomaly_features(anomalies, oids, features):
+    """
+    Extract features of anomalies.
+
+    Parameters
+    ----------
+    anomalies: 1D array of anomalies to extract features for.
+    oids: Dataset oids, 1D array.
+    features: Dataset features, 2D array.
+
+    Returns
+    -------
+    Numpy array of features for anomalies.
+    """
+    d = dict(zip(oids, range(len(oids))))  # not very efficient, yes
+    index = np.vectorize(lambda oid: d[oid])(anomalies)
+    return features[index]
