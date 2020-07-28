@@ -3,11 +3,15 @@ name: Rust
 on:
   push:
     paths:
-    - 'feat-extr/**'
+    - 'feat-extr/Cargo.toml'
+    - 'feat-extr/Cargo.lock'
+    - 'feat-extr/src/**'
     - '.github/workflows/rust.yml'
   pull_request:
     paths:
-    - 'feat-extr/**'
+    - 'feat-extr/Cargo.toml'
+    - 'feat-extr/Cargo.lock'
+    - 'feat-extr/src/**'
     - '.github/workflows/rust.yml'
 
 jobs:
