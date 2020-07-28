@@ -1,0 +1,28 @@
+name: Python
+
+on:
+  push:
+    paths:
+    - 'setup.py'
+    - 'zwad/**'
+    - '.github/workflows/python.yml'
+  pull_request:
+    paths:
+    - 'setup.py'
+    - 'zwad/**'
+    - '.github/workflows/python.yml'
+
+jobs:
+  zwad:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - name: Install pytest
+      run: pip install pytest
+    - name: Install zwad
+      run: pip install -e .
+    - name: Run tests
+      run: pytest

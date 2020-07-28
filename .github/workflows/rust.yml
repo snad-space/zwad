@@ -1,0 +1,32 @@
+name: Rust
+
+on:
+  push:
+    paths:
+    - 'feat-extr/**'
+    - '.github/workflows/rust.yml'
+  pull_request:
+    paths:
+    - 'feat-extr/**'
+    - '.github/workflows/rust.yml'
+
+jobs:
+  feat-extr:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: feat-extr
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install HDF5
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libhdf5-dev
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+    - name: Build
+      uses: actions-rs/cargo@v1
+      with:
+        command: build
+        args: --manifest-path feat-extr/Cargo.toml --all-targets --all-features
