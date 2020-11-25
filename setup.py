@@ -11,6 +11,8 @@ setuptools.setup(name='zwad',
                      'seaborn',
                      'tqdm',
                      'matplotlib>=3.1,<4.0',
+                     'astropy',
+                     'requests',
                      'ad_examples @ git+https://github.com/shubhomoydas/ad_examples.git@60afac80eb0ed7d7da1a02b7718a8d6d305179ab#egg=ad_examples-0.0.0'],
                  entry_points={
                      'console_scripts': [
