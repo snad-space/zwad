@@ -1,1 +1,114 @@
-#,oid,tag,tag_detailed,Comments0,795203200009604,Cataclysmic,AM Herculis,polars1,795205400022890,Pulsating,Mira,2,795206400033919,artefact,ghost,dispersed LC3,795209300012791,Pulsating,RRAB,RR Lyrae variables with asymmetric light curves (steep ascending branches)4,795215300016556,artefact,bright star,5,795211200035931,SN,SN Ia,SN 2018coi6,795205400027537,Mira_projected,Mira_projected,"Automatic photometry artefact; due to pulsation of the real Mira variable 795205400022890, background star"7,795209200003484,uncat,,ZTF18abbpebf; SN Ia:8,795212100007964,uncat,,ZTF18aanbksg; AGN: Blazar:9,795205400027532,Mira_projected,Mira_projected,"Automatic photometry artefact; due to pulsation of the real Mira variable 795205400022890, background star"10,795213400008053,Pulsating,SR,LC can be interrupted by various irregularities - probably due to that it is anomaly11,795206400037347,artefact,ghost,12,795205100007271,uncat,,ZTF18aayatjf; SNIa:13,795204200006882,Eclipsing,EA,14,795206400027989,artefact,ghost,15,795206400000500,artefact,plane/flying body,1-point up16,795216300004349,artefact,plane/flying body,1-point up17,795216300023263,artefact,plane/flying body,1-point up18,795206400019486,artefact,plane/flying body,1-point up19,795216400030526,artefact,plane/flying body,1-point up20,795206400012361,artefact,plane/flying body,1-point up21,795206400039518,artefact,ghost,dispersed LC22,795216400012199,artefact,plane/flying body,1-point up23,795204200026512,artefact,ghost,dispersed LC24,795211400021366,artefact,ghost,dispersed LC25,795211400023360,artefact,ghost,dispersed LC26,795204100015114,artefact,bright star,dispersed LC27,795209200029270,artefact,ghost,dispersed LC28,795205400032594,artefact,ghost,dispersed LC29,795212200039202,artefact,ghost,dispersed LC30,795212200014189,artefact,bright star,dispersed LC31,795210200042516,artefact,ghost,dispersed LC32,795202400037130,artefact,ghost,dispersed LC33,795202400024457,artefact,ghost,dispersed LC34,795201400012733,artefact,ghost,dispersed LC35,795207100034573,artefact,bright star,dispersed LC36,795211400038984,artefact,bright star,dispersed LC37,795207400030111,artefact,ghost,dispersed LC38,795206400036832,artefact,ghost,dispersed LC39,795207400038007,artefact,ghost,dispersed LC40,795201400028889,artefact,ghost,dispersed LC41,795210200031949,artefact,ghost,dispersed LC42,795202400036255,artefact,ghost,dispersed LC43,795204200033475,artefact,ghost,dispersed LC44,795206400026690,artefact,ghost,dispersed LC45,795207400024810,artefact,ghost,dispersed LC46,795206400037001,artefact,ghost,dispersed LC47,795207300009235,artefact,bright star,dispersed LC48,795206400012603,artefact,plane/flying body,1-point up49,795206400001319,artefact,plane/flying body,1-point up50,795206400033829,artefact,plane/flying body,1-point up51,795206400003861,artefact,plane/flying body,1-point up52,795206400016695,artefact,plane/flying body,1-point up53,795206400019051,artefact,plane/flying body,1-point up54,795206400001607,artefact,plane/flying body,1-point up55,795206400001493,artefact,plane/flying body,1-point up56,795206400000781,artefact,plane/flying body,1-point up57,795212100000634,artefact,,58,795206400004307,artefact,plane/flying body,1-point up59,795206400024476,artefact,plane/flying body,1-point up60,795215300005208,artefact,plane/flying body,1-point up61,795215300004923,artefact,plane/flying body,1-point up62,795206400000573,artefact,plane/flying body,1-point up63,795201300008546,artefact,trembling of mount,1-point down64,795215300012619,artefact,plane/flying body,1-point up65,795208200002338,artefact,trembling of mount,1-point down66,795215300004945,artefact,plane/flying body,1-point up67,795206400001661,artefact,plane/flying body,1-point up68,795215300005007,artefact,plane/flying body,1-point up69,795215300005140,artefact,plane/flying body,1-point up70,795206400009380,artefact,plane/flying body,1-point up71,795208200001118,artefact,trembling of mount,1-point down72,795204200004657,artefact,,1-point down; not focused?73,795208200002025,artefact,,1-point down; not focused?74,795215400000126,artefact,plane/flying body,1-point up75,795202100005941,SN candidate,,ZTF18aanbnjh; QSO-I: AGN:; SLSN: -Êhttps://lasair.roe.ac.uk/lasair/static/jupyter/LuminousTransients.html76,795204300041568,uncat,,"ZTF18aakkcdf; binary; red and blue stars. Blue star has SDSS spectra, Class K1"77,795203300015537,artefact,bright star,dispersed LC78,795212300016614,artefact,bright star,dispersed LC79,795205400013369,Mira_projected,Mira_projected,"Automatic photometry artefact; due to pulsation of the real Mira variable 795205400022890, background star"80,795202300001087,Eclipsing,EA,81,795205200006323,artefact,cosmic,82,795209300016829,artefact,bright star,dispersed LC83,795215300005050,artefact,plane/flying body,1-point up84,795215300023152,artefact,bright star,dispersed LC85,795203300015496,artefact,bright star,dispersed LC86,795211400043151,artefact,ghost,dispersed LC87,795214300016648,uncat,,2-point up; binary; two red stars; red dwarf flare?88,795213400017653,artefact,,89,795206200012008,artefact,,1-point down; not focused?90,795214300016565,artefact,bright star,dispersed LC91,795216200029206,artefact,,92,795202200022472,uncat,,binary; two blue stars; SDSS J162958.26+525101.8 STAR93,795203200024306,artefact,bright star,94,795203300003762,uncat,,binary; two blue stars + 1 nearby; SDSS J162012.61+513804.1 STAR95,795203400004962,artefact,plane/flying body,1-point up96,795204100013041,uncat,,ZTF18abgvctp; Galaxy SDSS J160913.83+521251.397,795204200004634,artefact,cosmic,1-point up98,795204300009037,artefact,cosmic,1-point up99,795205400001697,uncat,,ZTF18aajsmrd; DSCT:;single star; SDSS J164749.77+534217.3 STAR100,795205400035251,uncat,,binary; two blue stars; SDSS J164533.41+531522.6 STAR101,795207300021584,artefact,cosmic,1-point up102,795209100030852,uncat,,binary; two blue stars103,795209400002699,uncat,,binary; two blue stars104,795210200004741,uncat,,binary; red and blue stars; SDSS J163246.13+561818.3 STAR105,795210400001565,uncat,,SDSS J163331.55+554406.1106,795211300011395,uncat,,SDSS J161842.47+552936.3107,795212400020557,artefact,ghost,SDSS J160742.92+554633.9 GALAXY108,795213200000671,SN candidate,,"ZTF18aaincjv; AGN I:, AGN:; Gaia18apj"109,795213300001714,Pulsating,SR,110,795214400010189,uncat,,binary; two red stars111,795215300018221,artefact,ghost,112,795215300023129,uncat,,binary; two red stars; SDSS J161924.85+572058.9 STAR
+-1,oid,tag,tag_detailed,Comments
+0,795206400033919,artefact,ghost,dispersed LC
+1,795215300016556,artefact,bright star,
+2,795206400037347,artefact,ghost,
+3,795206400027989,artefact,ghost,
+4,795206400000500,artefact,plane/flying body,1-point up
+5,795216300004349,artefact,plane/flying body,1-point up
+6,795216300023263,artefact,plane/flying body,1-point up
+7,795206400019486,artefact,plane/flying body,1-point up
+8,795216400030526,artefact,plane/flying body,1-point up
+9,795206400012361,artefact,plane/flying body,1-point up
+10,795206400039518,artefact,ghost,dispersed LC
+11,795216400012199,artefact,plane/flying body,1-point up
+12,795204200026512,artefact,ghost,dispersed LC
+13,795211400021366,artefact,ghost,dispersed LC
+14,795211400023360,artefact,ghost,dispersed LC
+15,795204100015114,artefact,bright star,dispersed LC
+16,795209200029270,artefact,ghost,dispersed LC
+17,795205400032594,artefact,ghost,dispersed LC
+18,795212200039202,artefact,ghost,dispersed LC
+19,795212200014189,artefact,bright star,dispersed LC
+20,795210200042516,artefact,ghost,dispersed LC
+21,795202400037130,artefact,ghost,dispersed LC
+22,795202400024457,artefact,ghost,dispersed LC
+23,795201400012733,artefact,ghost,dispersed LC
+24,795207100034573,artefact,bright star,dispersed LC
+25,795211400038984,artefact,bright star,dispersed LC
+26,795207400030111,artefact,ghost,dispersed LC
+27,795206400036832,artefact,ghost,dispersed LC
+28,795207400038007,artefact,ghost,dispersed LC
+29,795201400028889,artefact,ghost,dispersed LC
+30,795210200031949,artefact,ghost,dispersed LC
+31,795202400036255,artefact,ghost,dispersed LC
+32,795204200033475,artefact,ghost,dispersed LC
+33,795206400026690,artefact,ghost,dispersed LC
+34,795207400024810,artefact,ghost,dispersed LC
+35,795206400037001,artefact,ghost,dispersed LC
+36,795207300009235,artefact,bright star,dispersed LC
+37,795206400012603,artefact,plane/flying body,1-point up
+38,795206400001319,artefact,plane/flying body,1-point up
+39,795206400033829,artefact,plane/flying body,1-point up
+40,795206400003861,artefact,plane/flying body,1-point up
+41,795206400016695,artefact,plane/flying body,1-point up
+42,795206400019051,artefact,plane/flying body,1-point up
+43,795206400001607,artefact,plane/flying body,1-point up
+44,795206400001493,artefact,plane/flying body,1-point up
+45,795206400000781,artefact,plane/flying body,1-point up
+46,795212100000634,artefact,,
+47,795206400004307,artefact,plane/flying body,1-point up
+48,795206400024476,artefact,plane/flying body,1-point up
+49,795215300005208,artefact,plane/flying body,1-point up
+50,795215300004923,artefact,plane/flying body,1-point up
+51,795206400000573,artefact,plane/flying body,1-point up
+52,795201300008546,artefact,trembling of mount,1-point down
+53,795215300012619,artefact,plane/flying body,1-point up
+54,795208200002338,artefact,trembling of mount,1-point down
+55,795215300004945,artefact,plane/flying body,1-point up
+56,795206400001661,artefact,plane/flying body,1-point up
+57,795215300005007,artefact,plane/flying body,1-point up
+58,795215300005140,artefact,plane/flying body,1-point up
+59,795206400009380,artefact,plane/flying body,1-point up
+60,795208200001118,artefact,trembling of mount,1-point down
+61,795204200004657,artefact,,1-point down; not focused?
+62,795208200002025,artefact,,1-point down; not focused?
+63,795215400000126,artefact,plane/flying body,1-point up
+64,795203300015537,artefact,bright star,dispersed LC
+65,795212300016614,artefact,bright star,dispersed LC
+66,795205200006323,artefact,cosmic,
+67,795209300016829,artefact,bright star,dispersed LC
+68,795215300005050,artefact,plane/flying body,1-point up
+69,795215300023152,artefact,bright star,dispersed LC
+70,795203300015496,artefact,bright star,dispersed LC
+71,795211400043151,artefact,ghost,dispersed LC
+72,795213400017653,artefact,,
+73,795206200012008,artefact,,1-point down; not focused?
+74,795214300016565,artefact,bright star,dispersed LC
+75,795216200029206,artefact,,
+76,795203200024306,artefact,bright star,
+77,795203400004962,artefact,plane/flying body,1-point up
+78,795204200004634,artefact,cosmic,1-point up
+79,795204300009037,artefact,cosmic,1-point up
+80,795207300021584,artefact,cosmic,1-point up
+81,795212400020557,artefact,ghost,SDSS J160742.92+554633.9 GALAXY
+82,795215300018221,artefact,ghost,
+83,795204200006882,Eclipsing,EA,
+84,795202300001087,Eclipsing,EA,
+85,795205400027537,artefact,Mira/projected,
+86,795205400027532,artefact,Mira/projected,
+87,795205400013369,artefact,Mira/projected,
+88,795205400022890,Pulsating,Mira,
+89,795209300012791,Pulsating,RRAB,
+90,795213400008053,Pulsating,SR,
+91,795213300001714,Pulsating,SR,
+92,795211200035931,transient,SN Ia,
+93,795210400001565,uncat,,
+94,795211300011395,uncat,,
+95,795209200003484,uncat,,
+96,795212100007964,uncat,,
+97,795205100007271,uncat,,
+98,795202100005941,transient,SN candidate,
+99,795204300041568,uncat,,
+100,795202200022472,uncat,,
+101,795203300003762,uncat,,
+102,795204100013041,uncat,,
+103,795205400001697,uncat,,
+104,795205400035251,uncat,,
+105,795209100030852,uncat,,
+106,795209400002699,uncat,,
+107,795210200004741,uncat,,
+108,795213200000671,transient,SN candidate,
+109,795214400010189,uncat,,
+110,795215300023129,uncat,,
+111,795203200009604,Cataclysmic,AM,
+112,795214300016648,uncat,,
