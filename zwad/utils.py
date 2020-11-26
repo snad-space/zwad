@@ -1,4 +1,6 @@
 import numpy as np
+import pandas as pd
+
 
 def load_data(oid_list, feature_list):
     filenames = zip(oid_list, feature_list)
@@ -11,3 +13,10 @@ def load_data(oid_list, feature_list):
 
     oids, features = zip(*[load_single(*f) for f in filenames])
     return np.concatenate(oids), np.vstack(features)
+
+
+def latex_feature_names(path):
+    """Gives mapping between feature code names and pretty LaTeX names"""
+    df = pd.read_csv(path, index_col='short')
+    latex = df['latex']
+    return latex.to_dict()
