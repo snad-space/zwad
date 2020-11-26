@@ -1,0 +1,43 @@
+short,latex
+amplitude,Amplitude
+beyond_1_std,Beyond 1~Standard Deviation
+beyond_2_std,Beyond 2~Standard Deviations
+cusum,Cusum
+eta,$\eta$
+eta_e,$\eta^e$
+inter_percentile_range_25,Inter-percentile range~25\%
+inter_percentile_range_10,Inter-percentile range~10\%
+kurtosis,Kurtosis
+linear_fit_slope,Linear Fit Slope
+linear_fit_slope_sigma,Linear Fit Slope Error
+linear_fit_reduced_chi2,Linear Fit Reduced~$\chi^2$
+linear_trend,Linear Trend
+linear_trend_sigma,Linear Trend Error
+magnitude_percentage_ratio_40_5,"Magnitude Percentage Ratio ($p=0.4$, $q=0.05$)"
+magnitude_percentage_ratio_20_10,"Magnitude Percentage Ratio ($p=0.2$, $q=0.1$)"
+maximum_slope,Maximum Slope
+mean,Mean
+median_absolute_deviation,Median Absolute Deviation
+median_buffer_range_percentage_5,Median Buffer Range Percentage
+percent_amplitude,Percent Amplitude
+percent_difference_magnitude_percentile_5,Percent Difference Magnitude Percentile~5\%
+percent_difference_magnitude_percentile_20,Percent Difference Magnitude Percentile~20\%
+period_0,First Peak Period
+period_s_to_n_0,First Peak Period S/N
+period_1,Second Peak Period
+period_s_to_n_1,Second Peak Period S/N
+period_2,Third Peak Period
+period_s_to_n_2,Third Peak Period S/N
+periodogram_amplitude,Periodogram Amplitude
+periodogram_beyond_1_std,Periodogram Beyond 1~Standard Deviation
+periodogram_beyond_2_std,Periodogram Beyond 2~Standard Devaitions
+periodogram_cusum,Periodogram Cusum
+periodogram_eta,Periodogram $\eta$
+periodogram_inter_percentile_range_25,Periodogram Inter-percentile range
+periodogram_standard_deviation,Periodogram Standard Deviation
+periodogram_percent_amplitude,Periodogram Percent Amplitude
+chi2,Reduced~$\chi^2$
+skew,Skew
+standard_deviation,Standard Deviation
+stetson_K,Stetson~$K$
+weighted_mean,Weighted Mean
