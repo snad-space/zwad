@@ -55,3 +55,7 @@ zwadp -h
 ## Related repositories
 - [SNAD ZTF DR web-viewer](//github.com/snad-space/ztf-viewer)
 - [Light-curve features](//github.com/hombit/light-curve)
+- [SNAD ZTF DR API](http://db.ztf.snad.space)
+- [SNAD Light-curve feature API](http://features.lc.snad.space/help)
+- [SNAD OGLE-III metadata API](http://ogle3.snad.space/)
+- [SNAD ZTF Periodic Catalog API](http://periodic.ztf.snad.space)
