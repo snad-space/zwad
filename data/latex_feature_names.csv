@@ -30,7 +30,7 @@ period_2,Third Peak Period
 period_s_to_n_2,Third Peak Period S/N
 periodogram_amplitude,Periodogram Amplitude
 periodogram_beyond_1_std,Periodogram Beyond 1~Standard Deviation
-periodogram_beyond_2_std,Periodogram Beyond 2~Standard Devaitions
+periodogram_beyond_2_std,Periodogram Beyond 2~Standard Deviations
 periodogram_cusum,Periodogram Cusum
 periodogram_eta,Periodogram $\eta$
 periodogram_inter_percentile_range_25,Periodogram Inter-percentile range
