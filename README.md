@@ -1,9 +1,9 @@
 #### Source code for
 # Anomaly detection in the Zwicky Transient Facility DR3
 
-by [*Malanchev et al., 2020*](https://arxiv.org/abs/XXXXX)
+by [*Malanchev et al., 2020*](https://arxiv.org/abs/2012.01419)
 
-This guide allows you to use the ZTF anomaly detection tool presented by by [*Malanchev et al., 2020*](https://arxiv.org/abs/XXXXX).
+This guide allows you to use the ZTF anomaly detection tool presented by by [*Malanchev et al., 2020*](https://arxiv.org/abs/2012.01419).
 
 ## Package installation
 
