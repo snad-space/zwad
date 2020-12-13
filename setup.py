@@ -12,12 +12,13 @@ setuptools.setup(name='zwad',
                      'tqdm',
                      'matplotlib>=3.1,<4.0',
                      'astropy',
-                     'requests',
+                     'requests>=2,<3.0',
                      'ad_examples @ git+https://github.com/shubhomoydas/ad_examples.git@60afac80eb0ed7d7da1a02b7718a8d6d305179ab#egg=ad_examples-0.0.0'],
                  entry_points={
                      'console_scripts': [
                          'zwaad = zwad.aad:execute_from_commandline',
                          'zwadp = zwad.ad:ZtfAnomalyDetector.script',
                          'zwann = zwad.nn:execute_from_commandline',
+                         'zwad-zenodo = zwad.download_feature_set:execute_from_commandline',
                      ]
                  })

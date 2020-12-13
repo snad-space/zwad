@@ -22,12 +22,11 @@ pip install -e .
 ```
 
 ## Data download
-Light curve feature data for ZTF DR3 fields used in the research are available on SNAD SAI MSU server:
+Light curve feature data for ZTF DR3 fields used in the research are available on [Zenodo](https://zenodo.org/record/4318700).
+You can download it by:
 ```shell
 cd data
-for FILE in m31 deep disk; do
-    wget "http://sai.snad.space/ztf/${FILE}.tar.gz" -O - | tar -zxf -
-done
+zwad-zenodo
 ```
 
 ## Example
