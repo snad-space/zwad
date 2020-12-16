@@ -23,7 +23,7 @@ pip install -e .
 
 ## Data download
 Light curve feature data for ZTF DR3 fields used in the research are available on [Zenodo](https://zenodo.org/record/4318700).
-You can download it by:
+You can download it from the website or by:
 ```shell
 cd data
 zwad-zenodo
