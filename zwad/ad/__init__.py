@@ -3,6 +3,8 @@ import warnings
 import sys
 import numpy as np
 
+from abc import ABC, abstractmethod
+
 from sklearn.mixture import GaussianMixture
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn.svm import OneClassSVM
@@ -13,7 +15,7 @@ from zwad.ad.postprocess import save_anomaly_list
 from zwad.ad.util import run_classifier, fetch_anomalies
 
 
-class ZtfAnomalyDetector:
+class BaseAnomalyDetector(ABC):
     classifiers = {
         'gmm': GaussianMixture(n_components=10, covariance_type='spherical', n_init=15),
         'svm': OneClassSVM(gamma='scale', nu=0.02, kernel='rbf'),
@@ -25,21 +27,7 @@ class ZtfAnomalyDetector:
         self.parser = self._make_parser()
         self.args = self.parser.parse_args(args=args)
 
-        # Check number of datasets
-        if len(self.args.oid) != len(self.args.feature):
-            raise ValueError('number of oid files should be the same as features files')
-
-        # Read OIDs and features
-        names_array_list = []  # list of arrays with object names
-        values_array_list = []  # list of arrays with object values (features)
-        for i in range(len(self.args.oid)):
-            names_one_array = np.memmap(self.args.oid[i], dtype=np.int64)
-            names_array_list.append(names_one_array)
-            values_one_array = np.memmap(self.args.feature[i], dtype=np.float32).reshape(names_one_array.size, -1)
-            values_array_list.append(values_one_array)
-
-        self.names = np.concatenate(names_array_list, axis=0)
-        self.values = np.concatenate(values_array_list, axis=0)
+        self.names, self.values = self._load_dataset()
 
         # Classifier
         self.classifier = self.classifiers[self.args.classifier]
@@ -88,6 +76,10 @@ class ZtfAnomalyDetector:
         if self.args.output:
             scores.tofile(self.args.output)
 
+    @abstractmethod
+    def _load_dataset(self):
+        pass
+
     @staticmethod
     def _make_parser():
         parser = argparse.ArgumentParser(description='Run sklearn AD algorithm on ZTF data')
@@ -106,13 +98,40 @@ class ZtfAnomalyDetector:
         parser.add_argument('-k', '--scale', default='std', type=str,
                             help='Scale algorithm. One of minmax, std, pca. Default is std. '
                                  'The last one may have optional number of components, e.g. -k pca15.')
-        parser.add_argument('--oid', help='Name of the file with object IDs. May be repeated.',
-                            required=True, action='append')
-        parser.add_argument('--feature', help='Name of the file with corresponding features. May be repeated.',
-                            required=True, action='append')
         return parser
 
     @classmethod
     def script(cls):
         cls().run()
 
+class ZtfAnomalyDetector(BaseAnomalyDetector):
+    def __init__(self, args=None):
+        super(ZtfAnomalyDetector, self).__init__(args)
+
+    @classmethod
+    def _make_parser(cls):
+        parser = super(ZtfAnomalyDetector, cls)._make_parser()
+        parser.add_argument('--oid', help='Name of the file with object IDs. May be repeated.',
+                            required=True, action='append')
+        parser.add_argument('--feature', help='Name of the file with corresponding features. May be repeated.',
+                            required=True, action='append')
+        return parser
+
+    def _load_dataset(self):
+        # Check number of datasets
+        if len(self.args.oid) != len(self.args.feature):
+            raise ValueError('number of oid files should be the same as features files')
+
+        # Read OIDs and features
+        names_array_list = []  # list of arrays with object names
+        values_array_list = []  # list of arrays with object values (features)
+        for i in range(len(self.args.oid)):
+            names_one_array = np.memmap(self.args.oid[i], dtype=np.int64)
+            names_array_list.append(names_one_array)
+            values_one_array = np.memmap(self.args.feature[i], dtype=np.float32).reshape(names_one_array.size, -1)
+            values_array_list.append(values_one_array)
+
+        names = np.concatenate(names_array_list, axis=0)
+        values = np.concatenate(values_array_list, axis=0)
+
+        return names, values
