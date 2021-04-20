@@ -13,7 +13,8 @@ from sklearn.ensemble import IsolationForest
 from zwad.ad.preprocess import scale_values
 from zwad.ad.postprocess import save_anomaly_list
 from zwad.ad.util import run_classifier, fetch_anomalies
-from zwad.ad.transformation import *
+from zwad.ad.transformation import parse_feature_name, identical, period_norm, period_norm_inv, transform_direct, \
+    transform_inverse, transform_features
 
 
 class BaseAnomalyDetector(ABC):

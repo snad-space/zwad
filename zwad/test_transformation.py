@@ -15,3 +15,10 @@ def test_transform_features():
 
 def test_transform_dicts_keys():
     assert set(transform_direct) == set(transform_inverse)
+
+
+def test_direct_inverse_composition():
+    x = np.linspace(0.5, 3.5)
+    for feature in transform_direct:
+        y = transform_direct[feature](x)
+        np.testing.assert_allclose(x, transform_inverse[feature](y), rtol=1e-10)
