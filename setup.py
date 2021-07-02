@@ -13,7 +13,7 @@ setuptools.setup(name='zwad',
                      'matplotlib>=3.1,<4.0',
                      'astropy',
                      'requests>=2,<3.0',
-                     'ad_examples @ git+https://github.com/shubhomoydas/ad_examples.git@60afac80eb0ed7d7da1a02b7718a8d6d305179ab#egg=ad_examples-0.0.0'],
+                     'ad_examples @ git+https://github.com/snad-space/ad_examples.git@7c62a81f52e79874d6215b262f5a849d56eeae4f#egg=ad_examples-0.0.0'],
                  entry_points={
                      'console_scripts': [
                          'zwaad = zwad.aad:execute_from_commandline',
