@@ -1,9 +1,9 @@
 #### Source code for
 # Anomaly detection in the Zwicky Transient Facility DR3
 
-by [*Malanchev et al., 2020*](https://arxiv.org/abs/2012.01419)
+<a href="https://ascl.net/2106.033"><img src="https://img.shields.io/badge/ascl-2106.033-blue.svg?colorB=262255" alt="ascl:2106.033" /></a> ![GithHub actions badge](https://github.com/snad-space/zwad/actions/workflows/python.yml/badge.svg)
 
-This guide allows you to use the ZTF anomaly detection tool presented by by [*Malanchev et al., 2020*](https://arxiv.org/abs/2012.01419).
+This guide allows you to use the ZTF anomaly detection tool presented by [*Malanchev et al., 2020*](https://arxiv.org/abs/2012.01419).
 
 ## Package installation
 
