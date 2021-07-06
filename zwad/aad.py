@@ -14,6 +14,7 @@ from ad_examples.aad.forest_description import CompactDescriber, MinimumVolumeCo
 
 import pandas as pd
 
+from zwad.ad.transformation import transform_features as transform_lc_features
 from zwad.utils import load_data
 
 """
@@ -255,6 +256,8 @@ def get_aad_option_list():
     parser.add_argument('--answers', metavar='FILENAME', action='append', help='answers.csv file for AnswersFileExpert')
     parser.add_argument('--oid', metavar='FILENAME', action='append', help='Filepath to oid.dat', required=True)
     parser.add_argument('--feature', metavar='FILENAME', action='append', help='Filepath to feature.dat', required=True)
+    parser.add_argument('--feature-names', metavar='FILENAME', help='Name of the file with feature names, one name per line')
+    parser.add_argument('--transform', action='store_true', help='Data transformation using nonlinear functions')
     parser.add_argument('-n', '--non_interactive', action='store_true', help='Suppress InteractiveExpert')
     parser.add_argument('-y', '--yes', action='store_true', help='Select \'yes\' for every choise')
     return parser
@@ -321,6 +324,13 @@ def main(argv=None):
     np.random.seed(opts.randseed)
 
     names, features = load_data(opts.oid, opts.feature)
+
+    if args.transform:
+        if args.feature_names is None:
+            raise ValueError('--feature-names must be specified when --transform is enabled')
+        with open(args.feature_names) as fh:
+            feature_names = fh.read().split()
+        transform_lc_features(features, feature_names)
 
     detect_anomalies_and_describe(features, names, opts)
 
