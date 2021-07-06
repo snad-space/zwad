@@ -55,7 +55,7 @@ class InteractiveExpert(object):
             self._browser = None
 
     def evaluate(self, name):
-        url = "https://ztf.snad.space/dr3/view/{}".format(name)
+        url = "https://ztf.snad.space/dr4/view/{}".format(name)
         if self._browser is not None:
             self._browser.open_new_tab(url)
         else:
