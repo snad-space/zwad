@@ -240,7 +240,7 @@ def detect_anomalies_and_describe(x, names, opts):
         logger.debug("region_extents: these are of the form [{feature_index: (feature range), ...}, ...]\n%s" %
                      (str(region_extents)))
 
-    basename = os.path.basename(opts.feature[0])
+    basename, _ = os.path.splitext(os.path.basename(opts.feature[0]))
 
     anomalies_filepath = os.path.join(opts.resultsdir, 'anomalies_{}.txt'.format(basename))
     save_anomalies(anomalies_filepath, names[ha])
