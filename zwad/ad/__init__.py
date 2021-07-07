@@ -1,6 +1,7 @@
 import argparse
 import warnings
-import sys
+import sys, os
+from pathlib import Path
 import numpy as np
 
 from abc import ABC, abstractmethod
@@ -29,6 +30,11 @@ class BaseAnomalyDetector(ABC):
         self.parser = self._make_parser()
         self.args = self.parser.parse_args(args=args)
 
+        # Set the OOM (un)protection, if needed
+        if self.args.kmp != 0:
+            kill_me_please(self.args.kmp)
+
+        # Load datasets
         self.names, self.values = self._load_dataset()
 
         # Classifier
@@ -99,6 +105,9 @@ class BaseAnomalyDetector(ABC):
                             help='Use first n objects, -1 for using all the objects.')
         parser.add_argument('-j', '--jobs', default=None, type=int,
                             help='Cores usage. Defaults to 1.')
+        parser.add_argument('-m', '--kill-me-please', metavar='KMP', dest='kmp',
+                            default=0, type=int, choices=[-1, 0, 1],
+                            help='Hint for the kernel what to do when memory ends: -1 (never kill me), 0 (default), 1 (always kill me).')
         parser.add_argument('-a', '--anomalies', default=40, type=int,
                             help='Number of anomalies to derive. Defaults to 40')
         parser.add_argument('-o', '--output', default=None,
@@ -139,12 +148,25 @@ class ZtfAnomalyDetector(BaseAnomalyDetector):
         names_array_list = []  # list of arrays with object names
         values_array_list = []  # list of arrays with object values (features)
         for i in range(len(self.args.oid)):
-            names_one_array = np.memmap(self.args.oid[i], dtype=np.int64)
+            names_one_array = np.memmap(self.args.oid[i], mode='r', dtype=np.int64)
             names_array_list.append(names_one_array)
-            values_one_array = np.memmap(self.args.feature[i], dtype=np.float32).reshape(names_one_array.size, -1)
+            values_one_array = np.memmap(self.args.feature[i], mode='r', dtype=np.float32).reshape(names_one_array.size, -1)
             values_array_list.append(values_one_array)
 
         names = np.concatenate(names_array_list, axis=0)
         values = np.concatenate(values_array_list, axis=0)
 
         return names, values
+
+
+def kill_me_please(kmp=0):
+    """
+    Tune the process parameters to instruct the kernel what to do,
+    when memory ends.
+    """
+
+    if sys.platform != 'linux':
+        raise ValueError('do not know how to tune the OOM score in ' + {sys.platform})
+
+    with open(Path('/', 'proc', str(os.getpid()), 'oom_score_adj'), 'w') as file:
+        file.write(str(1000 * kmp))
