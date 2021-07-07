@@ -139,9 +139,9 @@ class ZtfAnomalyDetector(BaseAnomalyDetector):
         names_array_list = []  # list of arrays with object names
         values_array_list = []  # list of arrays with object values (features)
         for i in range(len(self.args.oid)):
-            names_one_array = np.memmap(self.args.oid[i], dtype=np.int64)
+            names_one_array = np.memmap(self.args.oid[i], mode='r', dtype=np.int64)
             names_array_list.append(names_one_array)
-            values_one_array = np.memmap(self.args.feature[i], dtype=np.float32).reshape(names_one_array.size, -1)
+            values_one_array = np.memmap(self.args.feature[i], mode='r', dtype=np.float32).reshape(names_one_array.size, -1)
             values_array_list.append(values_one_array)
 
         names = np.concatenate(names_array_list, axis=0)
