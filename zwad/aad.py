@@ -27,24 +27,42 @@ pythonw -m aad.demo_aad
 logger = logging.getLogger(__name__)
 
 
-def save_answers(filename, names, decisions):
-    df = pd.DataFrame(data = {
-        "oid": names,
-        "is_anomaly": decisions
-    })
+class ResultsSink(object):
+    def __init__(self, anomalies_filename, answers_filename):
+        self._anomalies = open(anomalies_filename, mode="w", encoding="utf-8")
 
-    df.to_csv(filename, sep=",", encoding="utf-8", index=False)
+        self._answers = open(answers_filename, mode="w", encoding="utf-8")
+        self._answers.write("oid, is_anomaly\n")
+
+    def _handle_anomaly(self, name, decision):
+        if not decision:
+            return
+
+        self._anomalies.write("{}\n".format(name))
+        self._anomalies.flush()
+
+    def _handle_answer(self, name, decision):
+        self._answers.write("{}, {:b}\n".format(name, decision))
+        self._answers.flush()
+
+    def __call__(self, *args, **kwargs):
+        self._handle_anomaly(*args, **kwargs)
+        self._handle_answer(*args, **kwargs)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exception_type, exception_value, exception_traceback):
+        self._anomalies.close()
+        self._answers.close()
+
+        return False
 
 
 def load_answers(filename):
     df = pd.read_csv(filename)
 
     return df["oid"], df["is_anomaly"]
-
-
-def save_anomalies(filename, names):
-    with open(filename, 'w') as f:
-        f.write("\n".join(map(str, names)))
 
 
 class InteractiveExpert(object):
@@ -188,6 +206,10 @@ def get_expert(opts):
 def detect_anomalies_and_describe(x, names, opts):
     rng = np.random.RandomState(opts.randseed)
 
+    basename, _ = os.path.splitext(os.path.basename(opts.feature[0]))
+    anomalies_filepath = os.path.join(opts.resultsdir, 'anomalies_{}.txt'.format(basename))
+    answers_filename = os.path.join(opts.resultsdir, 'answers_{}.csv'.format(basename))
+
     expert = get_expert(opts)
 
     # prepare the AAD model
@@ -210,25 +232,28 @@ def detect_anomalies_and_describe(x, names, opts):
     queried = []  # labeled instances
     ha = []  # labeled anomaly instances
     hn = []  # labeled nominal instances
-    while len(queried) < opts.budget:
-        ordered_idxs, anom_score = model.order_by_score(x_transformed)
-        qx = qstate.get_next_query(ordered_indexes=ordered_idxs,
-                                   queried_items=queried)
-        queried.extend(qx)
-        for xi in qx:
-            yes = np.array(expert.evaluate(names[xi]), dtype=np.int64)
-            y_labeled[xi] = yes
-            if yes == 1:
-                ha.append(xi)
-            else:
-                hn.append(xi)
+    with ResultsSink(anomalies_filepath, answers_filename) as sink:
+        while len(queried) < opts.budget:
+            ordered_idxs, anom_score = model.order_by_score(x_transformed)
+            qx = qstate.get_next_query(ordered_indexes=ordered_idxs,
+                                       queried_items=queried)
+            queried.extend(qx)
+            for xi in qx:
+                yes = np.array(expert.evaluate(names[xi]), dtype=np.int64)
+                y_labeled[xi] = yes
+                if yes == 1:
+                    ha.append(xi)
+                else:
+                    hn.append(xi)
 
-        # incorporate feedback and adjust ensemble weights
-        model.update_weights(x_transformed, y_labeled, ha=ha, hn=hn, opts=opts, tau_score=opts.tau)
+                sink(names[xi], yes)
 
-        # most query strategies (including QUERY_DETERMINISIC) do not have anything
-        # in update_query_state(), but it might be good to call this just in case...
-        qstate.update_query_state()
+            # incorporate feedback and adjust ensemble weights
+            model.update_weights(x_transformed, y_labeled, ha=ha, hn=hn, opts=opts, tau_score=opts.tau)
+
+            # most query strategies (including QUERY_DETERMINISIC) do not have anything
+            # in update_query_state(), but it might be good to call this just in case...
+            qstate.update_query_state()
 
     # generate compact descriptions for the detected anomalies
     ridxs_counts, region_extents = None, None
@@ -239,14 +264,6 @@ def detect_anomalies_and_describe(x, names, opts):
                      (len(ha), str(list(ridxs_counts))))
         logger.debug("region_extents: these are of the form [{feature_index: (feature range), ...}, ...]\n%s" %
                      (str(region_extents)))
-
-    basename, _ = os.path.splitext(os.path.basename(opts.feature[0]))
-
-    anomalies_filepath = os.path.join(opts.resultsdir, 'anomalies_{}.txt'.format(basename))
-    save_anomalies(anomalies_filepath, names[ha])
-
-    answers_filename = os.path.join(opts.resultsdir, 'answers_{}.csv'.format(basename))
-    save_answers(answers_filename, names[queried], y_labeled[queried])
     
     return model, x_transformed, queried, ridxs_counts, region_extents
 
