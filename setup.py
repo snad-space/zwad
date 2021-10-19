@@ -4,7 +4,7 @@ import setuptools
 setuptools.setup(name='zwad',
                  packages=['zwad'],
                  install_requires=[
-                     'pandas<1.0',
+                     'pandas<2.0',
                      'click',
                      'pillow',
                      'scikit-learn>=0.23',
