@@ -25,6 +25,8 @@ from ad_examples.aad.query_model import Query
 from zwad.ad.transformation import transform_features as transform_lc_features
 from zwad.utils import load_data
 
+import onnx
+from aad2onnx.convert import to_onnx
 
 """
 A simple no-frills demo of how to use AAD in an interactive loop.
@@ -286,6 +288,7 @@ def get_aad_option_list():
     parser.add_argument('--transform', action='store_true', help='Data transformation using nonlinear functions')
     parser.add_argument('-n', '--non_interactive', action='store_true', help='Suppress InteractiveExpert')
     parser.add_argument('-y', '--yes', action='store_true', help='Select \'yes\' for every choise')
+    parser.add_argument('--onnx_file', metavar='FILENAME', help='Dump trained model to ONNX format', required=False)
     return parser
 
 
@@ -358,7 +361,10 @@ def main(argv=None):
             feature_names = fh.read().split()
         transform_lc_features(features, feature_names)
 
-    detect_anomalies_and_describe(features, names, opts)
+    model, *_ = detect_anomalies_and_describe(features, names, opts)
+    if args.onnx_file is not None:
+        model_onnx = to_onnx(model, features)
+        onnx.save_model(model_onnx, args.onnx_file)
 
 def execute_from_commandline(argv=None):
     main(argv)
