@@ -23,7 +23,7 @@ class BaseAnomalyDetector(ABC):
         'gmm': GaussianMixture(n_components=10, covariance_type='spherical', n_init=15),
         'svm': OneClassSVM(gamma='scale', nu=0.02, kernel='rbf'),
         'lof': LocalOutlierFactor(n_neighbors=100, contamination=0.02, algorithm='kd_tree', metric='euclidean'),
-        'iso': IsolationForest(max_samples=1000, contamination='auto', behaviour='new', n_estimators=1000),
+        'iso': IsolationForest(max_samples=1000, contamination='auto', n_estimators=1000),
     }
 
     def __init__(self, args=None):

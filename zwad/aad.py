@@ -1,21 +1,30 @@
 #!/usr/bin/env python
 
+import click
+import logging
 import os
 import sys
 import webbrowser
 
-import click
 import numpy as np
-
-from ad_examples.aad import aad_globals
-from ad_examples.aad.aad_support import *
-from ad_examples.aad.forest_description import CompactDescriber, MinimumVolumeCoverDescriber, \
-    BayesianRulesetsDescriber, get_region_memberships
-
 import pandas as pd
+
+from ad_examples.common.utils import configure_logger
+from ad_examples.common.gen_samples import get_synthetic_samples
+from ad_examples.aad import aad_globals
+from ad_examples.aad.aad_globals import (
+    AAD_IFOREST, IFOR_SCORE_TYPE_NEG_PATH_LEN, HST_LOG_SCORE_TYPE, AAD_HSTREES, RSF_SCORE_TYPE,
+    AAD_RSFOREST, INIT_UNIF, AAD_CONSTRAINT_TAU_INSTANCE, QUERY_DETERMINISIC, ENSEMBLE_SCORE_LINEAR,
+    AadOpts
+)
+from ad_examples.aad.aad_support import get_aad_model
+from ad_examples.aad.forest_aad_detector import is_forest_detector
+from ad_examples.aad.forest_description import CompactDescriber, MinimumVolumeCoverDescriber, BayesianRulesetsDescriber, get_region_memberships
+from ad_examples.aad.query_model import Query
 
 from zwad.ad.transformation import transform_features as transform_lc_features
 from zwad.utils import load_data
+
 
 """
 A simple no-frills demo of how to use AAD in an interactive loop.

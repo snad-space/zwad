@@ -4,16 +4,16 @@ import setuptools
 setuptools.setup(name='zwad',
                  packages=['zwad'],
                  install_requires=[
-                     'pandas<1.0',
+                     'pandas<2.0',
                      'click',
                      'pillow',
-                     'scikit-learn<0.23',
+                     'scikit-learn>=0.23',
                      'seaborn',
                      'tqdm',
                      'matplotlib>=3.1,<4.0',
                      'astropy',
                      'requests>=2,<3.0',
-                     'ad_examples @ git+https://github.com/snad-space/ad_examples.git@7c62a81f52e79874d6215b262f5a849d56eeae4f#egg=ad_examples-0.0.0'],
+                     'ad_examples @ git+https://github.com/shubhomoydas/ad_examples.git@0a7b86c4f2f7306ff543a15b387fe938f9c06130#egg=ad_examples-0.0.1'],
                  entry_points={
                      'console_scripts': [
                          'zwaad = zwad.aad:execute_from_commandline',
