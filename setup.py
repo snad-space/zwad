@@ -4,6 +4,7 @@ import setuptools
 setuptools.setup(name='zwad',
                  packages=['zwad'],
                  install_requires=[
+                     'coniferest @ git+https://github.com/snad-space/coniferest.git@de3112ab0f2b5bea5d7d33887b2e119b1476840e#egg=coniferest-0.0.2',
                      'pandas<2.0',
                      'click',
                      'pillow',

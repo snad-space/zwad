@@ -9,7 +9,7 @@ from abc import ABC, abstractmethod
 from sklearn.mixture import GaussianMixture
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn.svm import OneClassSVM
-from sklearn.ensemble import IsolationForest
+from coniferest.isoforest import IsolationForest
 
 from zwad.ad.preprocess import scale_values
 from zwad.ad.postprocess import save_anomaly_list
@@ -23,7 +23,7 @@ class BaseAnomalyDetector(ABC):
         'gmm': GaussianMixture(n_components=10, covariance_type='spherical', n_init=15),
         'svm': OneClassSVM(gamma='scale', nu=0.02, kernel='rbf'),
         'lof': LocalOutlierFactor(n_neighbors=100, contamination=0.02, algorithm='kd_tree', metric='euclidean'),
-        'iso': IsolationForest(max_samples=1000, contamination='auto', n_estimators=1000),
+        'iso': IsolationForest(n_subsamples=1024, n_trees=3000),
     }
 
     def __init__(self, args=None):
