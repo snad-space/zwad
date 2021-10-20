@@ -2,6 +2,8 @@
 import setuptools
 
 setuptools.setup(name='zwad',
+                 license_files = ('LICENSE',),
+                 license='MIT',
                  packages=['zwad'],
                  install_requires=[
                      'pandas<2.0',
