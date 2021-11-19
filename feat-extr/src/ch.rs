@@ -60,23 +60,31 @@ impl<'b> Row<'b> {
     }
 }
 
+struct CurrentBlock {
+    block: Block,
+    size: usize,
+    idx: usize,
+}
+
+impl CurrentBlock {
+    fn new(block: Block) -> Self {
+        let size = block.row_count();
+        Self {
+            block,
+            size,
+            idx: 0,
+        }
+    }
+}
+
 pub struct CHLightCurvesQueryIterator<'a> {
     query: CHLightCurvesQuery<'a>,
-    block: Block,
-    block_size: usize,
-    row_block_idx: usize,
+    block: Option<CurrentBlock>,
 }
 
 impl<'a> CHLightCurvesQueryIterator<'a> {
-    fn new(mut query: CHLightCurvesQuery<'a>) -> Self {
-        let block = task::block_on(query.stream.next()).unwrap().unwrap();
-        let block_size = block.row_count();
-        Self {
-            query,
-            block,
-            block_size,
-            row_block_idx: 0,
-        }
+    fn new(query: CHLightCurvesQuery<'a>) -> Self {
+        Self { query, block: None }
     }
 
     fn row_to_obs(row: Row) -> LightCurveObservation {
@@ -94,24 +102,25 @@ impl<'a> Iterator for CHLightCurvesQueryIterator<'a> {
     type Item = LightCurveObservation;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if self.row_block_idx < self.block_size {
-            self.row_block_idx += 1;
-        } else {
-            self.block_size = 0;
-            while self.block_size == 0 {
-                let block = task::block_on(self.query.stream.next());
-                if block.is_none() {
-                    return None;
-                }
-                self.block = block.unwrap().unwrap();
-                self.block_size = self.block.row_count();
+        while self.block.is_none()
+            || self.block.as_ref().unwrap().size == self.block.as_ref().unwrap().idx
+        {
+            match task::block_on(self.query.stream.next()) {
+                Some(block) => self.block = Some(CurrentBlock::new(block.unwrap())),
+                None => return None,
             }
-            self.row_block_idx = 1;
         }
-        Some(Self::row_to_obs(Row {
-            block: &self.block,
-            idx: self.row_block_idx - 1,
-        }))
+
+        match &mut self.block {
+            Some(cur_block) => {
+                cur_block.idx += 1;
+                Some(Self::row_to_obs(Row {
+                    block: &cur_block.block,
+                    idx: cur_block.idx - 1,
+                }))
+            }
+            None => panic!("We cannot be here"),
+        }
     }
 }
 
