@@ -43,7 +43,7 @@ class ResultsSink(object):
         self._anomalies = open(anomalies_filename, mode="w", encoding="utf-8")
 
         self._answers = open(answers_filename, mode="w", encoding="utf-8")
-        self._answers.write("oid, is_anomaly\n")
+        self._answers.write("oid,is_anomaly\n")
 
     def _handle_anomaly(self, name, decision):
         if not decision:
@@ -53,7 +53,7 @@ class ResultsSink(object):
         self._anomalies.flush()
 
     def _handle_answer(self, name, decision):
-        self._answers.write("{}, {:b}\n".format(name, decision))
+        self._answers.write("{},{:b}\n".format(name, decision))
         self._answers.flush()
 
     def __call__(self, *args, **kwargs):
