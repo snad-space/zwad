@@ -12,18 +12,6 @@ def test_zwadp():
     assert r.returncode == 0
 
 
-def test_zwaad():
-    """
-    Test run of zwaad
-    """
-    r = run(['zwaad',
-             '--oid', 'data/fakes/oid_m31_fake.dat',
-             '--feature', 'data/fakes/feature_m31_fake.dat',
-             '--budget', '5',
-             '--yes'])
-    assert r.returncode == 0
-
-
 def test_zwann():
     """
     Test run of zwann
