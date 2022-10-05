@@ -51,6 +51,50 @@ zwadp -c iso --oid oid_m31.dat --oid fakes/oid_m31_fake.dat --feature feature_m3
 zwadp -h
 ```
 
+### Active anomaly detection
+
+Lets use the same data from [Zenodo](https://zenodo.org/record/4318700).
+```shell
+cd data
+zwad-zenodo
+```
+
+It is better to create temporary directory to run active anomaly detection:
+```shell
+mkdir ../tmp
+cd tmp
+```
+
+```shell
+# Run AAD algorithm with M31 dataset
+zwaad --budget 4 --oid ../data/oid_m31.dat --feature ../data/feature_m31.dat --feature-names ../data/feature_m31.name --anomalies my_anomalies.txt aad
+```
+
+The script output may be as the following:
+```
+Check https://ztf.snad.space/dr4/view/695211400088968 for details
+Is 695211400088968 anomaly? [y/N]: y
+```
+It is waiting for our decision now. Let us decide that `695211400088968` is an anomaly and continue:
+```
+Check https://ztf.snad.space/dr4/view/695211400088968 for details
+Is 695211400088968 anomaly? [y/N]: y
+Check https://ztf.snad.space/dr4/view/695211400053697 for details
+Is 695211400053697 anomaly? [y/N]: n
+Check https://ztf.snad.space/dr4/view/695211100037499 for details
+Is 695211100037499 anomaly? [y/N]: n
+Check https://ztf.snad.space/dr4/view/695211200008024 for details
+Is 695211200008024 anomaly? [y/N]: y
+```
+
+Now we have examined all four samples within our budget.
+```shell
+# Check found anomalies
+cat my_anomalies.txt
+695211400088968
+695211200008024
+```
+
 ## Related repositories
 - [SNAD ZTF DR web-viewer](https://github.com/snad-space/ztf-viewer)
 - [Light-curve features](https://github.com/hombit/light-curve)
