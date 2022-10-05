@@ -195,7 +195,7 @@ def make_argument_parser():
     parser.add_argument('--feature-names', help='Name of the file with feature names, one name per line')
     parser.add_argument('--transform', help='Data transformation using nonlinear functions', action='store_true')
     parser.add_argument('-n', '--non-interactive', help='Run in non-interactive mode.', action='store_true', default=False)
-    parser.add_argument('--budget', help='Number of data samples to examine.', default=40)
+    parser.add_argument('--budget', help='Number of data samples to examine.', default=40, type=int)
     parser.add_argument('-s', '--random_seed', default=42, type=int, help='Fix the seed for reproducibility. Defaults to 42.')
 
     subparsers = parser.add_subparsers(required=True, metavar='ALGO')
