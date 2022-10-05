@@ -62,12 +62,12 @@ zwad-zenodo
 It is better to create temporary directory to run active anomaly detection:
 ```shell
 mkdir ../tmp
-cd tmp
+cd ../tmp
 ```
 
 ```shell
 # Run AAD algorithm with M31 dataset
-zwaad --budget 4 --oid ../data/oid_m31.dat --feature ../data/feature_m31.dat --feature-names ../data/feature_m31.name --anomalies my_anomalies.txt aad
+zwaad --random_seed 42 --budget 4 --oid ../data/oid_m31.dat --feature ../data/feature_m31.dat --feature-names ../data/feature_m31.name --anomalies my_anomalies.txt aad
 ```
 
 The script output may be as the following:
