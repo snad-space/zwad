@@ -7,9 +7,11 @@ import pandas as pd
 import sys
 import webbrowser
 
-from coniferest.aadforest import AADForest, AADForestAnomalyDetector
-from coniferest.datasets import Label
-from coniferest.pineforest import PineForest, PineForestAnomalyDetector
+from coniferest.aadforest import AADForest
+from coniferest.session import Session
+from coniferest.session.callback import TerminateAfter, viewer_decision_callback
+from coniferest.label import Label
+from coniferest.pineforest import PineForest
 
 from zwad.ad.transformation import transform_features as transform_lc_features
 from zwad.utils import load_data
@@ -35,18 +37,20 @@ class ResultsSink:
         if self._answers is not None:
             self._answers.close()
 
-    def _handle_anomaly(self, name, decision):
-        if not decision:
+    def _handle_anomaly(self, metadata, data, session):
+        if session.last_decision != Label.ANOMALY:
             return
 
-        self._anomalies.write("{}\n".format(name))
+        self._anomalies.write("{}\n".format(metadata))
         self._anomalies.flush()
 
-    def _handle_answer(self, name, decision):
+    def _handle_answer(self, metadata, data, session):
         if self._answers is None:
             return
 
-        self._answers.write("{},{:b}\n".format(name, decision))
+        decision = 1 if session.last_decision == Label.ANOMALY else 0
+
+        self._answers.write("{},{:b}\n".format(metadata, decision))
         self._answers.flush()
 
     def __call__(self, *args, **kwargs):
@@ -74,84 +78,41 @@ def load_answers(answers):
     return res
 
 class ConiferestEngine:
-    def __init__(self, anomaly_detector, *, budget, non_interactive):
-        self._anomaly_detector = anomaly_detector
+    def __init__(self, model, *, budget, non_interactive):
+        self._model = model
         self._budget = budget
         self._non_interactive = non_interactive
 
-        try:
-            self._browser = webbrowser.get()
-        except webbrowser.Error:
-            self._browser = None
-
-    def _handle_initial_knowns(self, oid, feature, answers):
+    def _handle_initial_knowns(self, oid, answers):
         if answers is None or len(answers) == 0:
             return {}
 
         known_indices = np.where(np.isin(oid, list(answers.keys())))[0]
-        known_data = feature[known_indices]
-        known_labels = np.full(known_data.shape[0], Label.ANOMALY)
+        known_labels = np.full(known_indices.shape[0], Label.ANOMALY)
         known_labels[np.asarray(answers.values()) == 0] = Label.REGULAR
-
-        self._anomaly_detector.observe(known_data, known_labels)
 
         return dict(zip(np.atleast_1d(known_indices), np.atleast_1d(known_labels)))
 
-    def _evaluate(self, name):
-        url = "https://ztf.snad.space/dr4/view/{}".format(name)
-        if self._browser is not None:
-            self._browser.open_new_tab(url)
-        else:
-            click.echo("Check {} for details".format(url))
-
-        result = click.confirm("Is {} anomaly?".format(name))
-        label = Label.ANOMALY if result else Label.REGULAR
-
-        return result, label
-
-    def _run_interactive(self, oid, feature, known):
+    def run(self, oid, feature, answers, sink):
         budget = min(self._budget, feature.shape[0])
-
-        for _ in range(budget):
-            scores = self._anomaly_detector.score(feature)
-            scores_idx = np.argsort(scores)
-            a = next(filter(lambda idx: (idx not in known), scores_idx))
-            a_oid = oid[a]
-
-            result, label = self._evaluate(a_oid)
-
-            self._anomaly_detector.observe(np.atleast_1d(feature[a]), np.atleast_1d(label))
-            known[a] = label
-
-            yield (a_oid, result)
-
-    def _run_non_interactive(self, oid, feature):
-        budget = min(self._budget, feature.shape[0])
-
-        scores = self._anomaly_detector.score(feature)
-        scores_idx = np.argsort(scores)
-
-        for i in range(budget):
-            a_oid = oid[scores_idx[i]]
-
-            yield (a_oid, True)
-
-    def run(self, oid, feature, answers):
-        self._anomaly_detector.train(feature)
-
-        known = self._handle_initial_knowns(oid, feature, answers)
+        known_labels = self._handle_initial_knowns(oid, answers)
 
         if self._non_interactive:
-            return self._run_non_interactive(oid, feature)
+            decision_callback = lambda metadata, data, session: Label.ANOMALY
+        else:
+            decision_callback = viewer_decision_callback
 
-        return self._run_interactive(oid, feature, known)
+        return Session(feature, oid,
+            model=self._model,
+            known_labels=known_labels,
+            decision_callback=decision_callback,
+            on_decision_callbacks=[
+                sink,
+                TerminateAfter(budget),
+            ]).run()
 
 
 class AADEngine(ConiferestEngine):
-    def __init__(self, aadforest, *args, **kwargs):
-        anomaly_detector = AADForestAnomalyDetector(aadforest)
-        super().__init__(anomaly_detector, *args, **kwargs)
-
     @classmethod
     def from_args(cls, args):
         aadforest = AADForest(
@@ -166,10 +127,6 @@ class AADEngine(ConiferestEngine):
             non_interactive = args.non_interactive)
 
 class PineForestEngine(ConiferestEngine):
-    def __init__(self, pineforest, *args, **kwargs):
-        anomaly_detector = PineForestAnomalyDetector(pineforest)
-        super().__init__(anomaly_detector, *args, **kwargs)
-
     @classmethod
     def from_args(cls, args):
         pineforest = PineForest(
@@ -277,8 +234,7 @@ def main(argv=None):
         transform_lc_features(features, feature_names)
 
     with ResultsSink(args.anomalies, args.answers) as sink:
-        for (oid, decision) in engine.run(oids, features, answers):
-            sink(oid, decision)
+        engine.run(oids, features, answers, sink)
 
 def execute_from_commandline(argv=None):
     main(argv)

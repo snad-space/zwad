@@ -6,7 +6,7 @@ setuptools.setup(name='zwad',
                  license='MIT',
                  packages=['zwad', 'zwad.ad'],
                  install_requires=[
-                     'coniferest==0.0.4',
+                     'coniferest==0.0.10',
                      'pandas<2.0',
                      'click',
                      'pillow',
