@@ -120,7 +120,8 @@ class AADEngine(ConiferestEngine):
             n_subsamples = args.n_subsamples,
             max_depth    = args.max_depth,
             tau          = args.tau,
-            random_seed  = args.random_seed)
+            random_seed  = args.random_seed,
+            n_jobs       = args.n_jobs)
         return cls(
             aadforest,
             budget = args.budget,
@@ -136,7 +137,8 @@ class PineForestEngine(ConiferestEngine):
             n_spare_trees    = args.n_spare_trees,
             regenerate_trees = args.regenerate_trees,
             weight_ratio     = args.weight_ratio,
-            random_seed      = args.random_seed)
+            random_seed      = args.random_seed,
+            n_jobs           = args.n_jobs)
         return cls(
             pineforest,
             budget = args.budget,
@@ -154,6 +156,7 @@ def make_argument_parser():
     parser.add_argument('-n', '--non-interactive', help='Run in non-interactive mode.', action='store_true', default=False)
     parser.add_argument('--budget', help='Number of data samples to examine.', default=40, type=int)
     parser.add_argument('-s', '--random_seed', default=42, type=int, help='Fix the seed for reproducibility. Defaults to 42.')
+    parser.add_argument('--n_jobs', help='Number of parallel threads (if supported). Defaults to 1.', default=1, type=int)
 
     subparsers = parser.add_subparsers(required=True, metavar='ALGO')
 
