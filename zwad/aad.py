@@ -146,7 +146,7 @@ class PineForestEngine(ConiferestEngine):
 
 def make_argument_parser():
     parser = argparse.ArgumentParser(description='Active anomaly detection for ZTF data')
-    parser.add_argument('--prior_answers', help='Name of the file with the prior expert decisions. The answers are shown to the algorithm but not repeated in output files specified by --answers and --anomalies arguments. May be repeated.', action='append', default=[])
+    parser.add_argument('--prior_answers', help='Name of the file with the prior expert decisions. The answers are shown to the algorithm but not repeated in output files specified by --answers and --anomalies arguments. Several files with prior expert decisions are possible.', action='append', default=[])
     parser.add_argument('--answers', help='Name of the file to store expert answers. May be used later as the input for --prior_answers argument.')
     parser.add_argument('--anomalies', help='Name of the file to store found anomalies. When run in non-interactive mode all found anomalies within the budget are stored, when run in interactive mode all confirmed anomalies are stored.', required=True)
     parser.add_argument('--oid', help='Name of the file with object IDs. May be repeated.', required=True, action='append')
