@@ -116,12 +116,13 @@ class AADEngine(ConiferestEngine):
     @classmethod
     def from_args(cls, args):
         aadforest = AADForest(
-            n_trees      = args.n_trees,
-            n_subsamples = args.n_subsamples,
-            max_depth    = args.max_depth,
-            tau          = args.tau,
-            random_seed  = args.random_seed,
-            n_jobs       = args.n_jobs)
+            n_trees         = args.n_trees,
+            n_subsamples    = args.n_subsamples,
+            max_depth       = args.max_depth,
+            tau             = args.tau,
+            random_seed     = args.random_seed,
+            prior_influence = args.prior_influence,
+            n_jobs          = args.n_jobs)
         return cls(
             aadforest,
             budget = args.budget,
@@ -177,6 +178,10 @@ def make_argument_parser():
         type=float,
         help='The AAD tau quantile.',
         default=0.97)
+    parser_aad.add_argument('--prior_influence',
+        type=float,
+        help='Prior influence',
+        default=1.0)
     parser_aad.set_defaults(cls=AADEngine)
 
     parser_pineforest = subparsers.add_parser('pineforest')
