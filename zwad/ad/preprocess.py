@@ -72,7 +72,7 @@ def scale_values(features, algorithm=None):
     if algorithm == 'std':
         mean = features.mean(axis=0)
         std = features.std(axis=0)
-        return (features - mean) / np.maximum(std, np.finfo(np.float).eps)
+        return (features - mean) / np.maximum(std, np.finfo(np.float64).eps)
     elif algorithm == 'pca':
         mean = features.mean(axis=0)
         u, _, _ = np.linalg.svd(features - mean, full_matrices=False)
